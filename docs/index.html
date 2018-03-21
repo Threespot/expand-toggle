@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Home - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="module.exports.html">exports</a></span></li>
+</nav>
+
+<div id="main">
+    
+
+    
+
+
+
+    
+
+
+
+
+
+
+
+
+
+    
+
+
+    <section class="readme">
+        <article><h1>Expand Toggle</h1><p><a href="https://www.npmjs.com/package/@threespot/expand-toggle"><img src="https://badge.fury.io/js/%40threespot%2Fexpand-toggle.svg" alt="npm"></a>
+<a href="https://travis-ci.org/Threespot/expand-toggle"><img src="https://travis-ci.org/Threespot/expand-toggle.svg?branch=master" alt="Build Status"></a>
+<a href="https://coveralls.io/github/Threespot/expand-toggle"><img src="https://coveralls.io/repos/github/Threespot/expand-toggle/badge.svg" alt="Coverage Status"></a></p>
+<p>Simple and accessible expandable functionality, similar to jQuery’s <code>slideToggle()</code> method.</p>
+<p>Inspired by https://inclusive-components.design/menus-menu-buttons#truemenus.</p>
+<h2>Install</h2><pre class="prettyprint source lang-bash"><code>yarn add @threespot/expand-toggle</code></pre><h2>Usage</h2><p><strong>JavaScript</strong></p>
+<pre class="prettyprint source lang-js"><code>import ExpandToggle from &quot;@threespot/expand-toggle&quot;;
+
+const toggles = document.querySelectorAll(&quot;[data-expands]&quot;);
+
+// ES6
+toggles.forEach( (el) => new ExpandToggle(el) );
+
+// ES5
+for (var i = 0, len = toggles.length; i &lt; len; i++) {
+  new ExpandToggle(toggles[i]);
+}</code></pre><p><strong>Styles</strong></p>
+<p>The following styles are required (class name is just for example purposes):</p>
+<pre class="prettyprint source lang-scss"><code>  .expandable {
+    $menu-speed: 400ms;
+    max-height: 0;// hide on load to prevent relayout
+    overflow: hidden;
+    transition: max-height $menu-speed ease-in-out,
+                visibility 0s linear 0s;
+    visibility: visible;
+
+    &[aria-hidden=&quot;true&quot;] {
+      max-height: 0 !important;// !important required to override inline styles added by JS
+      transition: max-height $menu-speed ease-in-out,
+                  visibility 0s linear $menu-speed;
+      visibility: hidden;
+    }
+  }</code></pre><p><strong>Markup</strong></p>
+<pre class="prettyprint source lang-html"><code>  &lt;button type=&quot;button&quot; data-expands=&quot;menu&quot; data-expands-class=&quot;is-expanded&quot; data-expands-height>
+    &lt;span data-expands-text=&quot;Close&quot;>Toggle Menu&lt;/span>
+  &lt;/button>
+
+  &lt;div class=&quot;expandable&quot; id=&quot;menu&quot;>
+    &lt;p>This content will be hidden to start.&lt;/p>
+  &lt;/div></code></pre><h3>Options</h3><p><code>data-expands-class</code> defines a class (or multiple classes) to apply to the toggle button and expandable element when expanded</p>
+<p><code>data-expands-height</code> transitions the menu height using <code>max-height</code> and CSS transitions (see required CSS above)</p>
+<p><code>data-expands-text</code> defines button text to use when expanded</p>
+<p>These options can also be set in JavaScript:</p>
+<pre class="prettyprint source lang-js"><code>new ExpandToggle(el, {
+  expandedClasses: &quot;is-expanded&quot;,
+  shouldToggleHeight: true,
+  activeToggleText: &quot;Close&quot;,
+});</code></pre><h2>License</h2><p>This is free software and may be redistributed under the terms of the <a href="https://github.com/Threespot/expand-toggle/blob/master/LICENSE.md">MIT license</a>.</p>
+<h2>About Threespot</h2><p>Threespot is an independent digital agency hell-bent on helping those, and only those, who are committed to helping others. Find out more at <a href="https://www.threespot.com">https://www.threespot.com</a>.</p>
+<p><a href="https://www.threespot.com"><img src="https://avatars3.githubusercontent.com/u/370822?v=3&amp;s=100" alt="Threespot"></a></p></article>
+    </section>
+
+
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Mar 21 2018 16:19:46 GMT-0400 (EDT) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

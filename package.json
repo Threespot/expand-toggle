@@ -1,0 +1,75 @@
+{
+  "name": "@threespot/expand-toggle",
+  "version": "1.0.0",
+  "description": "Wrap the last X words in an HTML tag to prevent them from wrapping",
+  "main": "index.js",
+  "homepage": "https://threespot.github.io/expand-toggle/",
+  "author": "Threespot <hello@threespot.com>",
+  "contributors": [
+    "Mat Brady <matbr8dy@gmail.com>",
+    "Ted Whitehead <tedwhitehead@gmail.com>"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Threespot/expand-toggle.git"
+  },
+  "keywords": [
+    "expand",
+    "collapse",
+    "expandable",
+    "menu"
+  ],
+  "bugs": {
+    "url": "https://github.com/Threespot/expand-toggle/issues"
+  },
+  "engines": {
+    "node": ">=6.0.0",
+    "npm": ">=3.0.0"
+  },
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "webpack": "webpack --config webpack.config.js",
+    "docs": "jsdoc index.js -t node_modules/minami --readme README.md --destination docs",
+    "test": "jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+    "test:local": "jest --coverage --no-cache",
+    "preversion": "npm run test && npm run docs",
+    "patch": "npm version patch --force -m \"version %s\""
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "yarn run test:local"
+    }
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "jsx"
+    ],
+    "moduleDirectories": [
+      "node_modules"
+    ]
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-preset-env": "^1.6.1",
+    "coveralls": "^3.0.0",
+    "husky": "^0.15.0-rc.8",
+    "jest": "^22.0.4",
+    "jsdoc": "^3.5.5",
+    "minami": "^1.2.3",
+    "uglifyjs-webpack-plugin": "^1.2.0",
+    "webpack": "^4.0.0",
+    "webpack-cli": "^2.0.10",
+    "webpack-merge": "^4.1.1"
+  },
+  "dependencies": {
+    "lodash": "4.x"
+  },
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  }
+}
