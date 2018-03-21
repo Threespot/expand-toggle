@@ -1,5 +1,6 @@
 # Ignore local dev only files
 
+.coveralls.yml
 *.cache
 *.dump
 *.dump.*

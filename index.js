@@ -37,7 +37,9 @@ export default class ExpandToggle {
     // Accessibility setup
     this.el.setAttribute("aria-haspopup", true);
     this.el.setAttribute("aria-expanded", false);
-    this.el.setAttribute("aria-controls", this.targetId);
+    // Omit “aria-controls” for now
+    // See https://inclusive-components.design/menus-menu-buttons/#ariacontrols
+    // this.el.setAttribute("aria-controls", this.targetId);
     this.targetEl.setAttribute("aria-hidden", true);
 
     if (this.el.tagName.toLowerCase() === "a") {
