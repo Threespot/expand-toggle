@@ -33,7 +33,7 @@
     "docs": "jsdoc index.js -t node_modules/minami --readme README.md --destination docs",
     "test": "jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "test:local": "jest --coverage --no-cache",
-    "preversion": "npm run test && npm run docs",
+    "preversion": "npm run test && npm run webpack && npm run docs",
     "patch": "npm version patch --force -m \"version %s\""
   },
   "husky": {
