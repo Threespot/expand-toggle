@@ -38,6 +38,7 @@ function addCSS() {
 }
 
 // FIXME: Figure out why max-height is 0px in tests
+// TODO: Add keyboard event tests
 
 test('Basic test', () => {
   document.body.innerHTML = `
