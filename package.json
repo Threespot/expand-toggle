@@ -31,15 +31,17 @@
   "scripts": {
     "webpack": "webpack --config webpack.config.js",
     "docs": "jsdoc index.js -t node_modules/minami --readme README.md --destination docs",
-    "test": "jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
-    "test:local": "jest --coverage --no-cache",
-    "preversion": "npm run test && npm run webpack && npm run docs",
-    "patch": "npm version patch --force -m \"version %s\""
-  },
-  "husky": {
-    "hooks": {
-      "pre-push": "yarn run test:local"
-    }
+    "test:prod": "jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+    "test": "jest --coverage --no-cache",
+    "npm-patch": "npm version patch --force -m \"version %s\"",
+    "npm-minor": "npm version minor --force -m \"version %s\"",
+    "npm-major": "npm version major --force -m \"version %s\"",
+    "patch": "read -p 'Confirm publish new patch (0.0.x) to npm: (y/n) ' -n 1 -r \n if [[ $REPLY =~ ^[Yy]$ ]] \n then \n yarn npm-patch \n fi",
+    "minor": "read -p 'Confirm publish new minor version (0.x.0) to npm (y/n) ' -n 1 -r \n if [[ $REPLY =~ ^[Yy]$ ]] \n then \n yarn npm-minor \n fi",
+    "major": "read -p 'Confirm publish new major version (x.0.0) to npm (y/n) ' -n 1 -r \n if [[ $REPLY =~ ^[Yy]$ ]] \n then \n yarn npm-major \n fi",
+    "preversion": "yarn test:prod",
+    "version": "yarn webpack && yarn docs && git add .",
+    "postversion": "git push && git push --tags"
   },
   "jest": {
     "moduleFileExtensions": [
