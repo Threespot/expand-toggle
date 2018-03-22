@@ -34,34 +34,48 @@ for (var i = 0, len = toggles.length; i < len; i++) {
 
 **Styles**
 
-The following styles are required (class name is just for example purposes):
+The following minimum styles are required (class name is an example):
 
 ```scss
-  .expandable {
-    $menu-speed: 400ms;
-    max-height: 0;// hide on load to prevent relayout
-    overflow: hidden;
-    transition: max-height $menu-speed ease-in-out,
-                visibility 0s linear 0s;
-    visibility: visible;
+  .expandableContent {
+    $transition-speed: 400ms;
 
-    &[aria-hidden="true"] {
+    // Expanded state
+    &,
+    .js &[aria-hidden="false"] {
+      overflow: hidden;
+      transition: max-height $transition-speed ease-in-out,
+                  visibility 0s linear 0s;
+      visibility: visible;
+    }
+
+    // Collapsed state
+    &[aria-hidden="true"],
+    // Selector below prevents a flash of unstyled content (FOUC)
+    .js &:not([aria-hidden]) {
       max-height: 0 !important;// !important required to override inline styles added by JS
-      transition: max-height $menu-speed ease-in-out,
-                  visibility 0s linear $menu-speed;
+      transition: max-height $transition-speed ease-in-out,
+                  visibility 0s linear $transition-speed;
       visibility: hidden;
     }
+  }
+
+  // We also suggest hiding the button when JS is disabled.
+  // Note: Modernizr looks for a “no-js” class on the html tag and replaces it with “js” on load.
+  //       If not using Modernizr, see https://www.paulirish.com/2009/avoiding-the-fouc-v3/
+  .no-js [data-expands] {
+    display: none;
   }
 ```
 
 **Markup**
 
 ```html
-  <button type="button" data-expands="menu" data-expands-class="is-expanded" data-expands-height>
-    <span data-expands-text="Close">Toggle Menu</span>
+  <button type="button" data-expands="demo" data-expands-class="is-expanded" data-expands-height>
+    <span data-expands-text="Close">Open</span>
   </button>
 
-  <div class="expandable" id="menu">
+  <div class="expandable" id="demo">
     <p>This content will be hidden to start.</p>
   </div>
 ```
