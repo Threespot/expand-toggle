@@ -34,10 +34,11 @@ for (var i = 0, len = toggles.length; i < len; i++) {
 
 **Styles**
 
-The following minimum styles are required (class name is an example):
+The following minimum styles are required:
 
 ```scss
-  .expandableContent {
+  // This class name is just an example
+  .expandable {
     $transition-speed: 400ms;
 
     // Expanded state
