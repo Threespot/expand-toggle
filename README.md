@@ -24,7 +24,7 @@ import ExpandToggle from "@threespot/expand-toggle";
 const toggles = document.querySelectorAll("[data-expands]");
 
 // ES6
-toggles.forEach( (el) => new ExpandToggle(el) );
+toggles.forEach(el => new ExpandToggle(el));
 
 // ES5
 for (var i = 0, len = toggles.length; i < len; i++) {

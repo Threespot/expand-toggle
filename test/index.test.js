@@ -2,7 +2,7 @@ import ExpandToggle from "../index";
 
 // Remove line breaks and consecutive spaces to make it easier to compare markup
 function minify(string) {
-  return string.replace(/\r?\n|\r/g,'').replace(/\s+/g,' ').trim()
+  return string.replace(/\s{2,}/g,'').trim();
 }
 
 // Add inline style tag
