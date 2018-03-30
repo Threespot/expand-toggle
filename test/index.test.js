@@ -38,16 +38,13 @@ function addCSS() {
 }
 
 // FIXME: Figure out why max-height is 0px in tests
-// TODO: Add keyboard event tests
 
 test('Basic test', () => {
   document.body.innerHTML = `
     <button type="button" data-expands="menu">Toggle Menu</button>
-
     <div class="expandable" id="menu">
       <p>Menu content</p>
-    </div>
-  `;
+    </div>`;
 
   // Add demo CSS required to make component work
   addCSS();
@@ -60,7 +57,6 @@ test('Basic test', () => {
 
   expect(minify(document.body.innerHTML)).toBe(minify(`
     <button type="button" data-expands="menu" aria-haspopup="true" aria-expanded="true">Toggle Menu</button>
-
     <div class="expandable" id="menu" aria-hidden="false">
       <p>Menu content</p>
     </div>`));
@@ -69,20 +65,56 @@ test('Basic test', () => {
 
   expect(minify(document.body.innerHTML)).toBe(minify(`
     <button type="button" data-expands="menu" aria-haspopup="true" aria-expanded="false">Toggle Menu</button>
-
     <div class="expandable" id="menu" aria-hidden="true">
       <p>Menu content</p>
     </div>`));
 });
 
 
-test('Full options test', () => {
+test('Keyboard test', () => {
+  document.body.innerHTML = `
+    <button type="button" data-expands="menu">Toggle Menu</button>
+    <div class="expandable" id="menu">
+      <p>Menu content</p>
+    </div>`;
+
+  // Add demo CSS required to make component work
+  addCSS();
+
+  var toggle = document.querySelector('[data-expands]');
+
+  var menu = new ExpandToggle(toggle);
+
+  toggle.focus();
+
+  // Simulate down arrow key event
+  var downArrow = new KeyboardEvent('keydown', {'keyCode': 40});
+  toggle.dispatchEvent(downArrow);
+
+  expect(minify(document.body.innerHTML)).toBe(minify(`
+    <button type="button" data-expands="menu" aria-haspopup="true" aria-expanded="true">Toggle Menu</button>
+    <div class="expandable" id="menu" aria-hidden="false">
+      <p>Menu content</p>
+    </div>`));
+
+  // Simulate escape key event
+  var escape = new KeyboardEvent('keydown', {'keyCode': 27});
+  toggle.dispatchEvent(escape);
+
+  expect(minify(document.body.innerHTML)).toBe(minify(`
+    <button type="button" data-expands="menu" aria-haspopup="true" aria-expanded="false">Toggle Menu</button>
+    <div class="expandable" id="menu" aria-hidden="true">
+      <p>Menu content</p>
+    </div>`));
+});
+
+
+test('HTML attribute test', () => {
   document.body.innerHTML = `
     <div>
-      <button type="button" data-expands="menu" data-expands-class="is-expanded" data-expands-height>
+      <a href="#" data-expands="menu" data-expands-class="is-expanded foo" data-expands-height>
         <span data-expands-text="Close">Toggle Menu</span>
-      </button>
-
+      </a>
       <div class="expandable" id="menu">
         <p>Menu content</p>
       </div>
@@ -100,11 +132,10 @@ test('Full options test', () => {
 
   expect(minify(document.body.innerHTML)).toBe(minify(`
     <div>
-      <button type="button" data-expands="menu" data-expands-class="is-expanded" data-expands-height="" aria-haspopup="true" aria-expanded="true" class="is-expanded">
+      <a href="#" data-expands="menu" data-expands-class="is-expanded foo" data-expands-height="" aria-haspopup="true" aria-expanded="true" role="button" class="is-expanded foo">
         <span data-expands-text="Close">Close</span>
-      </button>
-
-      <div class="expandable is-expanded" id="menu" aria-hidden="false" style="max-height: 0px;">
+      </a>
+      <div class="expandable is-expanded foo" id="menu" aria-hidden="false" style="max-height: 0px;">
         <p>Menu content</p>
       </div>
     </div>`));
@@ -114,14 +145,32 @@ test('Full options test', () => {
 
   expect(minify(document.body.innerHTML)).toBe(minify(`
     <div>
-      <button type="button" data-expands="menu" data-expands-class="is-expanded" data-expands-height="" aria-haspopup="true" aria-expanded="false" class="">
+      <a href="#" data-expands="menu" data-expands-class="is-expanded foo" data-expands-height="" aria-haspopup="true" aria-expanded="false" role="button" class="">
         <span data-expands-text="Close">Toggle Menu</span>
-      </button>
-
+      </a>
       <div class="expandable" id="menu" aria-hidden="true" style="max-height: 0px;">
         <p>Menu content</p>
       </div>
     </div>`));
+
+
+  // TODO: Figure out how to test window resize
+
+  // // Create spy to determine if function has been called after resize
+  // // https://facebook.github.io/jest/docs/en/jest-object.html#jestspyonobject-methodname-accesstype
+  // const spy = jest.spyOn(menu, 'updateExpandedHeight');
+  //
+  // // Change the viewport to 500px.
+  // global.innerWidth = 600;
+  //
+  // // Trigger the window resize event.
+  // global.dispatchEvent(new Event('resize'));
+  //
+  // // Window resize
+  // var resize = new Event('resize');
+  // window.dispatchEvent(resize);
+  //
+  // expect(spy).toHaveBeenCalled();
 });
 
 
@@ -131,7 +180,6 @@ test('JS options test', () => {
       <button type="button" data-expands="menu">
         <span data-expands-text>Toggle Menu</span>
       </button>
-
       <div class="expandable" id="menu">
         <p>Menu content</p>
       </div>
@@ -176,3 +224,17 @@ test('JS options test', () => {
       </div>
     </div>`));
 });
+
+
+test('No target element test', () => {
+  global.console = { warn: jest.fn() };
+
+  document.body.innerHTML = `<button type="button" data-expands="menu">Toggle Menu</button>`;
+
+  var toggle = document.querySelector('[data-expands]');
+
+  var menu = new ExpandToggle(toggle);
+
+  expect(console.warn).toBeCalled();
+});
+

@@ -88,11 +88,11 @@ export default class ExpandToggle {
 
     // Keyboard listeners on toggle button
     this.el.addEventListener("keydown", function(evt) {
-      // Expand with up arrow
+      // Expand with down arrow
       if (evt.keyCode == 40) {
         self.expand();
       }
-      // Close with down arrow or escape key
+      // Close with up arrow or escape key
       else if (evt.keyCode == 38 || evt.keyCode == 27) {
         self.collapse();
       }
