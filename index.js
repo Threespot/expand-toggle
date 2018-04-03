@@ -28,8 +28,8 @@ export default class ExpandToggle {
       {},
       {
         expandedClasses: "", // string, accepts multiple space-separated classes
-        shouldToggleHeight: false,// should target element’s height be animated using max-height
-        activeToggleText: "",// expanded state toggle button text
+        shouldToggleHeight: false, // should target element’s height be animated using max-height
+        activeToggleText: "" // expanded state toggle button text
       },
       opts
     );
@@ -47,7 +47,9 @@ export default class ExpandToggle {
     }
 
     // Check for custom expanded class(es)
-    this.expandedClasses = this.el.getAttribute("data-expands-class") || this.options.expandedClasses;
+    this.expandedClasses =
+      this.el.getAttribute("data-expands-class") ||
+      this.options.expandedClasses;
 
     if (this.expandedClasses.length) {
       // Check if active class string contains multiple classes
@@ -65,7 +67,9 @@ export default class ExpandToggle {
     }
 
     // Check if height should be animated
-    this.shouldToggleHeight = this.el.hasAttribute("data-expands-height") || this.options.shouldToggleHeight;
+    this.shouldToggleHeight =
+      this.el.hasAttribute("data-expands-height") ||
+      this.options.shouldToggleHeight;
 
     if (this.shouldToggleHeight) {
       this.heightToggleSetup();
@@ -77,7 +81,9 @@ export default class ExpandToggle {
 
     if (this.textEl) {
       this.defaultToggleText = this.textEl.textContent;
-      this.activeToggleText = this.textEl.getAttribute("data-expands-text") || this.options.activeToggleText;
+      this.activeToggleText =
+        this.textEl.getAttribute("data-expands-text") ||
+        this.options.activeToggleText;
       this.hasActiveText = !!this.activeToggleText.length;
     }
 
@@ -91,9 +97,8 @@ export default class ExpandToggle {
       // Expand with down arrow
       if (evt.keyCode == 40) {
         self.expand();
-      }
-      // Close with up arrow or escape key
-      else if (evt.keyCode == 38 || evt.keyCode == 27) {
+      } else if (evt.keyCode == 38 || evt.keyCode == 27) {
+        // Close with up arrow or escape key
         self.collapse();
       }
     });
@@ -101,7 +106,7 @@ export default class ExpandToggle {
 
   heightToggleSetup() {
     var self = this;
-    this.parentEl = this.el.parentNode;
+    this.targetParentEl = this.targetEl.parentNode;
 
     // Set max-height to the expanded height so we can animate it.
     this.updateExpandedHeight();
@@ -129,7 +134,6 @@ export default class ExpandToggle {
   // Note: We’re using CSS to transition max-height instead jQuery’s slideToggle(),
   //       or another 3rd-party lib like Velocity.js, to avoid loading a large lib.
   updateExpandedHeight() {
-
     // Get width of original element so we can apply it to the clone
     var nodeWidth = Math.round(parseFloat(this.targetEl.offsetWidth));
 
@@ -145,14 +149,17 @@ export default class ExpandToggle {
     // Update “aria-hidden” attribute
     cloneEl.setAttribute("aria-hidden", false);
 
+    // Remove id just to be safe
+    cloneEl.removeAttribute("id");
+
     // Append clone to document, save as new var so we can remove it later
-    var newEl = this.parentEl.insertBefore(cloneEl, this.targetEl);
+    var newEl = this.targetParentEl.insertBefore(cloneEl, this.targetEl);
 
     // Calculate height
     var expandedHeight = Math.round(parseFloat(newEl.offsetHeight));
 
     // Remove cloned node to clean up after ourselves
-    this.parentEl.removeChild(newEl);
+    this.targetParentEl.removeChild(newEl);
 
     // Apply inline max-height to collapsed element
     // Note: CSS is overriding this when aria-hidden="true"
