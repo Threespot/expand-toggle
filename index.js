@@ -7,8 +7,8 @@ import debounce from "lodash/debounce";
  * @param {HTMLElement} el - Toggle button DOM node
  * @param {Object} opts - Options
  * @param {string} [opts.expandedClasses=""] - Class(es) to apply when expanded
- * @param {boolean} [opts.shouldToggleHeight=false] - Whether
- * @param {string} [opts.defaultToggleText=""] - expanded state toggle button text
+ * @param {boolean} [opts.shouldToggleHeight=false] - Whether or not to animate height
+ * @param {string} [opts.defaultToggleText=""] - Expanded state toggle button text
  */
 export default class ExpandToggle {
   constructor(el, opts) {
@@ -33,18 +33,6 @@ export default class ExpandToggle {
       },
       opts
     );
-
-    // Accessibility setup
-    this.el.setAttribute("aria-haspopup", true);
-    this.el.setAttribute("aria-expanded", false);
-    // Omit “aria-controls” for now
-    // See https://inclusive-components.design/menus-menu-buttons/#ariacontrols
-    // this.el.setAttribute("aria-controls", this.targetId);
-    this.targetEl.setAttribute("aria-hidden", true);
-
-    if (this.el.tagName.toLowerCase() === "a") {
-      this.el.setAttribute("role", "button");
-    }
 
     // Check for custom expanded class(es)
     this.expandedClasses =
@@ -71,9 +59,6 @@ export default class ExpandToggle {
       this.el.hasAttribute("data-expands-height") ||
       this.options.shouldToggleHeight;
 
-    if (this.shouldToggleHeight) {
-      this.heightToggleSetup();
-    }
 
     // Check for custom toggle button text to use when expanded
     this.hasActiveText = false;
@@ -87,21 +72,43 @@ export default class ExpandToggle {
       this.hasActiveText = !!this.activeToggleText.length;
     }
 
+    this.init();
+  }
+
+  init() {
+    var self = this;
+
+    // Accessibility setup
+    this.el.setAttribute("aria-haspopup", true);
+    this.el.setAttribute("aria-expanded", false);
+    // Omit “aria-controls” for now
+    // See https://inclusive-components.design/menus-menu-buttons/#ariacontrols
+    // this.el.setAttribute("aria-controls", this.targetId);
+    this.targetEl.setAttribute("aria-hidden", true);
+
+    if (this.el.tagName.toLowerCase() === "a") {
+      this.el.setAttribute("role", "button");
+    }
+
+    if (this.shouldToggleHeight) {
+      this.heightToggleSetup();
+    }
+
     // Add click event listener on toggle button
-    this.el.addEventListener("click", function(evt) {
-      self.toggle();
-    });
+    this.el.addEventListener("click", this.toggle.bind(this));
 
     // Keyboard listeners on toggle button
-    this.el.addEventListener("keydown", function(evt) {
-      // Expand with down arrow
-      if (evt.keyCode == 40) {
-        self.expand();
-      } else if (evt.keyCode == 38 || evt.keyCode == 27) {
-        // Close with up arrow or escape key
-        self.collapse();
-      }
-    });
+    this.el.addEventListener("keydown", this.keydownHandler.bind(this));
+  }
+
+  keydownHandler(evt) {
+    // Expand with down arrow
+    if (evt.keyCode == 40) {
+      this.expand();
+    } else if (evt.keyCode == 38 || evt.keyCode == 27) {
+      // Close with up arrow or escape key
+      this.collapse();
+    }
   }
 
   heightToggleSetup() {
@@ -118,11 +125,6 @@ export default class ExpandToggle {
         self.updateExpandedHeight();
       }, 150)
     );
-
-    // Listen for events that may affect the target element’s height (optional)
-    document.documentElement.addEventListener("fonts-loaded", function() {
-      self.updateExpandedHeight();
-    });
   }
 
   // Set max-height of target element to its expanded height without triggering relayout.
@@ -200,11 +202,34 @@ export default class ExpandToggle {
     this.targetEl.setAttribute("aria-hidden", true);
   }
 
-  toggle() {
+  toggle(evt) {
     if (this.el.getAttribute("aria-expanded") === "true") {
       this.collapse();
     } else {
       this.expand();
     }
+  }
+
+  destroy() {
+    this.el.removeAttribute("aria-haspopup");
+    this.el.removeAttribute("aria-expanded");
+    this.targetEl.removeAttribute("aria-hidden");
+    this.targetEl.style.removeProperty("max-height");
+
+    if (this.el.tagName.toLowerCase() === "a") {
+      this.el.removeAttribute("role");
+    }
+
+    if (this.hasActiveText) {
+      this.textEl.textContent = this.defaultToggleText;
+    }
+
+    if (this.expandedClasses.length) {
+      this.el.classList.remove(...this.expandedClasses);
+      this.targetEl.classList.remove(...this.expandedClasses);
+    }
+
+    this.el.removeEventListener("click", this.toggle);
+    this.el.removeEventListener("keydown", this.keydownHandler);
   }
 }

@@ -109,7 +109,7 @@ test('Keyboard test', () => {
 });
 
 
-test('HTML attribute test', () => {
+test('Link with data attrs test', () => {
   document.body.innerHTML = `
     <div>
       <a href="#" data-expands="menu" data-expands-class="is-expanded foo" data-expands-height>
@@ -220,6 +220,80 @@ test('JS options test', () => {
       </button>
 
       <div class="expandable" id="menu" aria-hidden="true" style="max-height: 0px;">
+        <p>Menu content</p>
+      </div>
+    </div>`));
+});
+
+
+test('Destroy button test', () => {
+  document.body.innerHTML = `
+    <div>
+      <button type="button" data-expands="menu">
+        <span data-expands-text>Toggle Menu</span>
+      </button>
+      <div class="expandable" id="menu">
+        <p>Menu content</p>
+      </div>
+    </div>`;
+
+  // Add demo CSS required to make component work
+  addCSS();
+
+  var toggle = document.querySelector('[data-expands]');
+
+  var menu = new ExpandToggle(toggle, {
+    expandedClasses: "is-expanded",
+    shouldToggleHeight: true,
+    activeToggleText: "Close",
+  });
+
+  // Expand
+  toggle.click();
+
+  menu.destroy();
+
+  expect(minify(document.body.innerHTML)).toBe(minify(`
+    <div>
+      <button type="button" data-expands="menu" class="">
+        <span data-expands-text="">Toggle Menu</span>
+      </button>
+      <div class="expandable" id="menu" style="">
+        <p>Menu content</p>
+      </div>
+    </div>`));
+});
+
+
+test('Destroy link test', () => {
+  document.body.innerHTML = `
+    <div>
+      <a href="#" data-expands="menu" data-expands-class="is-expanded foo" data-expands-height>
+        <span data-expands-text="Close">Toggle Menu</span>
+      </a>
+      <div class="expandable" id="menu">
+        <p>Menu content</p>
+      </div>
+    </div>`;
+
+  // Add demo CSS required to make component work
+  addCSS();
+
+  var toggle = document.querySelector('[data-expands]');
+
+  var menu = new ExpandToggle(toggle);
+
+  // Expand
+  toggle.click();
+
+  menu.destroy();
+
+  expect(minify(document.body.innerHTML)).toBe(minify(`
+    <div>
+      <a href="#" data-expands="menu" data-expands-class="is-expanded foo" data-expands-height="" class="">
+        <span data-expands-text="Close">Toggle Menu</span>
+      </a>
+      <div class="expandable" id="menu" style="">
         <p>Menu content</p>
       </div>
     </div>`));
