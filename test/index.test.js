@@ -262,6 +262,19 @@ test('Destroy button test', () => {
         <p>Menu content</p>
       </div>
     </div>`));
+
+  // Try clicking toggle again
+  toggle.click();
+
+  expect(minify(document.body.innerHTML)).toBe(minify(`
+    <div>
+      <button type="button" data-expands="menu" class="">
+        <span data-expands-text="">Toggle Menu</span>
+      </button>
+      <div class="expandable" id="menu" style="">
+        <p>Menu content</p>
+      </div>
+    </div>`));
 });
 
 
