@@ -59,7 +59,6 @@ export default class ExpandToggle {
       this.el.hasAttribute("data-expands-height") ||
       this.options.shouldToggleHeight;
 
-
     // Check for custom toggle button text to use when expanded
     this.hasActiveText = false;
     this.textEl = this.el.querySelector("[data-expands-text]");
@@ -76,8 +75,6 @@ export default class ExpandToggle {
   }
 
   init() {
-    var self = this;
-
     // Accessibility setup
     this.el.setAttribute("aria-haspopup", true);
     this.el.setAttribute("aria-expanded", false);
@@ -94,14 +91,18 @@ export default class ExpandToggle {
       this.heightToggleSetup();
     }
 
-    // Add click event listener on toggle button
-    this.el.addEventListener("click", this.toggle.bind(this));
+    // Click event listener on toggle button
+    // Note: Callback needs to be assigned to a var so we can remove it since we’re using bind()
+    // https://stackoverflow.com/a/22870717/673457
+    this.clickHandler = this.toggle.bind(this);
+    this.el.addEventListener("click", this.clickHandler);
 
     // Keyboard listeners on toggle button
-    this.el.addEventListener("keydown", this.keydownHandler.bind(this));
+    this.keydownHandler = this.keyboardEvents.bind(this);
+    this.el.addEventListener("keydown", this.keydownHandler);
   }
 
-  keydownHandler(evt) {
+  keyboardEvents(evt) {
     // Expand with down arrow
     if (evt.keyCode == 40) {
       this.expand();
@@ -210,6 +211,7 @@ export default class ExpandToggle {
     }
   }
 
+  // Remove attributes and event listeners
   destroy() {
     this.el.removeAttribute("aria-haspopup");
     this.el.removeAttribute("aria-expanded");
@@ -229,7 +231,7 @@ export default class ExpandToggle {
       this.targetEl.classList.remove(...this.expandedClasses);
     }
 
-    this.el.removeEventListener("click", this.toggle);
+    this.el.removeEventListener("click", this.clickHandler);
     this.el.removeEventListener("keydown", this.keydownHandler);
   }
 }
