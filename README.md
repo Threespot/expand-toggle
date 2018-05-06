@@ -37,48 +37,48 @@ for (var i = 0, len = toggles.length; i < len; i++) {
 The following minimum styles are required:
 
 ```scss
-  // This class name is just an example
-  .expandable {
-    $transition-speed: 400ms;
+// This class name is just an example
+.expandable {
+  $transition-speed: 400ms;
 
-    // Expanded state
-    &,
-    .js &[aria-hidden="false"] {
-      overflow: hidden;
-      transition: max-height $transition-speed ease-in-out,
-                  visibility 0s linear 0s;
-      visibility: visible;
-    }
-
-    // Collapsed state
-    &[aria-hidden="true"],
-    // Selector below prevents a flash of unstyled content (FOUC)
-    .js &:not([aria-hidden]) {
-      max-height: 0 !important;// !important required to override inline styles added by JS
-      transition: max-height $transition-speed ease-in-out,
-                  visibility 0s linear $transition-speed;
-      visibility: hidden;
-    }
+  // Expanded state
+  &,
+  .js &[aria-hidden="false"] {
+    overflow: hidden;
+    transition: max-height $transition-speed ease-in-out,
+                visibility 0s linear 0s;
+    visibility: visible;
   }
 
-  // We also suggest hiding the button when JS is disabled.
-  // Note: Modernizr looks for a “no-js” class on the html tag and replaces it with “js” on load.
-  //       If not using Modernizr, see https://www.paulirish.com/2009/avoiding-the-fouc-v3/
-  .no-js [data-expands] {
-    display: none;
+  // Collapsed state
+  &[aria-hidden="true"],
+  // Selector below prevents a flash of unstyled content (FOUC)
+  .js &:not([aria-hidden]) {
+    max-height: 0 !important;// !important required to override inline styles added by JS
+    transition: max-height $transition-speed ease-in-out,
+                visibility 0s linear $transition-speed;
+    visibility: hidden;
   }
+}
+
+// We also suggest hiding the button when JS is disabled.
+// Note: Modernizr looks for a “no-js” class on the html tag and replaces it with “js” on load.
+//       If not using Modernizr, see https://www.paulirish.com/2009/avoiding-the-fouc-v3/
+.no-js [data-expands] {
+  display: none;
+}
 ```
 
 **Markup**
 
 ```html
-  <button type="button" data-expands="demo" data-expands-class="is-expanded" data-expands-height>
-    <span data-expands-text="Close">Open</span>
-  </button>
+<button type="button" data-expands="demo" data-expands-class="is-expanded" data-expands-height>
+  <span data-expands-text="Close">Open</span>
+</button>
 
-  <div class="expandable" id="demo">
-    <p>This content will be hidden to start.</p>
-  </div>
+<div class="expandable" id="demo">
+  <p>This content will be hidden to start.</p>
+</div>
 ```
 
 ### Options
@@ -96,6 +96,50 @@ new ExpandToggle(el, {
   expandedClasses: "is-expanded",
   shouldToggleHeight: true,
   activeToggleText: "Close",
+});
+```
+
+### Events
+
+#### ready
+
+Since the `ready` event may be trigger immediately, bind using the `onReady` option:
+
+```js
+const toggle = new ExpandToggle(el, {
+  onReady: function() {
+    console.log('ready');
+  }
+});
+```
+
+#### expand
+
+Triggered when component is expanded
+
+```js
+toggle.on('expand', function() {
+  console.log('expand');
+});
+```
+
+#### collapse
+
+Triggered when component is collapsed
+
+```js
+toggle.on('collapse', function() {
+  console.log('collapse');
+});
+```
+
+#### destroy
+
+Triggered when component is destroyed
+
+```js
+toggle.on('destroy', function() {
+  console.log('destroy');
 });
 ```
 
