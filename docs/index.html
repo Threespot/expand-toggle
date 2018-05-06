@@ -66,43 +66,43 @@ for (var i = 0, len = toggles.length; i &lt; len; i++) {
   new ExpandToggle(toggles[i]);
 }</code></pre><p><strong>Styles</strong></p>
 <p>The following minimum styles are required:</p>
-<pre class="prettyprint source lang-scss"><code>  // This class name is just an example
-  .expandable {
-    $transition-speed: 400ms;
+<pre class="prettyprint source lang-scss"><code>// This class name is just an example
+.expandable {
+  $transition-speed: 400ms;
 
-    // Expanded state
-    &,
-    .js &[aria-hidden=&quot;false&quot;] {
-      overflow: hidden;
-      transition: max-height $transition-speed ease-in-out,
-                  visibility 0s linear 0s;
-      visibility: visible;
-    }
-
-    // Collapsed state
-    &[aria-hidden=&quot;true&quot;],
-    // Selector below prevents a flash of unstyled content (FOUC)
-    .js &:not([aria-hidden]) {
-      max-height: 0 !important;// !important required to override inline styles added by JS
-      transition: max-height $transition-speed ease-in-out,
-                  visibility 0s linear $transition-speed;
-      visibility: hidden;
-    }
+  // Expanded state
+  &,
+  .js &[aria-hidden=&quot;false&quot;] {
+    overflow: hidden;
+    transition: max-height $transition-speed ease-in-out,
+                visibility 0s linear 0s;
+    visibility: visible;
   }
 
-  // We also suggest hiding the button when JS is disabled.
-  // Note: Modernizr looks for a “no-js” class on the html tag and replaces it with “js” on load.
-  //       If not using Modernizr, see https://www.paulirish.com/2009/avoiding-the-fouc-v3/
-  .no-js [data-expands] {
-    display: none;
-  }</code></pre><p><strong>Markup</strong></p>
-<pre class="prettyprint source lang-html"><code>  &lt;button type=&quot;button&quot; data-expands=&quot;demo&quot; data-expands-class=&quot;is-expanded&quot; data-expands-height>
-    &lt;span data-expands-text=&quot;Close&quot;>Open&lt;/span>
-  &lt;/button>
+  // Collapsed state
+  &[aria-hidden=&quot;true&quot;],
+  // Selector below prevents a flash of unstyled content (FOUC)
+  .js &:not([aria-hidden]) {
+    max-height: 0 !important;// !important required to override inline styles added by JS
+    transition: max-height $transition-speed ease-in-out,
+                visibility 0s linear $transition-speed;
+    visibility: hidden;
+  }
+}
 
-  &lt;div class=&quot;expandable&quot; id=&quot;demo&quot;>
-    &lt;p>This content will be hidden to start.&lt;/p>
-  &lt;/div></code></pre><h3>Options</h3><p><code>data-expands-class</code> defines a class (or multiple classes) to apply to the toggle button and expandable element when expanded</p>
+// We also suggest hiding the button when JS is disabled.
+// Note: Modernizr looks for a “no-js” class on the html tag and replaces it with “js” on load.
+//       If not using Modernizr, see https://www.paulirish.com/2009/avoiding-the-fouc-v3/
+.no-js [data-expands] {
+  display: none;
+}</code></pre><p><strong>Markup</strong></p>
+<pre class="prettyprint source lang-html"><code>&lt;button type=&quot;button&quot; data-expands=&quot;demo&quot; data-expands-class=&quot;is-expanded&quot; data-expands-height>
+  &lt;span data-expands-text=&quot;Close&quot;>Open&lt;/span>
+&lt;/button>
+
+&lt;div class=&quot;expandable&quot; id=&quot;demo&quot;>
+  &lt;p>This content will be hidden to start.&lt;/p>
+&lt;/div></code></pre><h3>Options</h3><p><code>data-expands-class</code> defines a class (or multiple classes) to apply to the toggle button and expandable element when expanded</p>
 <p><code>data-expands-height</code> transitions the menu height using <code>max-height</code> and CSS transitions (see required CSS above)</p>
 <p><code>data-expands-text</code> defines button text to use when expanded</p>
 <p>These options can also be set in JavaScript:</p>
@@ -110,6 +110,20 @@ for (var i = 0, len = toggles.length; i &lt; len; i++) {
   expandedClasses: &quot;is-expanded&quot;,
   shouldToggleHeight: true,
   activeToggleText: &quot;Close&quot;,
+});</code></pre><h3>Events</h3><h4>ready</h4><p>Since the <code>ready</code> event may be trigger immediately, bind using the <code>onReady</code> option:</p>
+<pre class="prettyprint source lang-js"><code>const toggle = new ExpandToggle(el, {
+  onReady: function() {
+    console.log('ready');
+  }
+});</code></pre><h4>expand</h4><p>Triggered when component is expanded</p>
+<pre class="prettyprint source lang-js"><code>toggle.on('expand', function() {
+  console.log('expand');
+});</code></pre><h4>collapse</h4><p>Triggered when component is collapsed</p>
+<pre class="prettyprint source lang-js"><code>toggle.on('collapse', function() {
+  console.log('collapse');
+});</code></pre><h4>destroy</h4><p>Triggered when component is destroyed</p>
+<pre class="prettyprint source lang-js"><code>toggle.on('destroy', function() {
+  console.log('destroy');
 });</code></pre><h2>License</h2><p>This is free software and may be redistributed under the terms of the <a href="https://github.com/Threespot/expand-toggle/blob/master/LICENSE.md">MIT license</a>.</p>
 <h2>About Threespot</h2><p>Threespot is an independent digital agency hell-bent on helping those, and only those, who are committed to helping others. Find out more at <a href="https://www.threespot.com">https://www.threespot.com</a>.</p>
 <p><a href="https://www.threespot.com"><img src="https://avatars3.githubusercontent.com/u/370822?v=3&amp;s=100" alt="Threespot"></a></p></article>
@@ -125,7 +139,7 @@ for (var i = 0, len = toggles.length; i &lt; len; i++) {
 <br class="clear">
 
 <footer>
-    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun May 06 2018 11:48:25 GMT-0400 (EDT) using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun May 06 2018 14:19:07 GMT-0400 (EDT) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>
