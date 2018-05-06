@@ -70,6 +70,7 @@
     "webpack-merge": "^4.1.1"
   },
   "dependencies": {
+    "ev-emitter": "1.x",
     "lodash": "4.x"
   },
   "directories": {

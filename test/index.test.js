@@ -226,7 +226,7 @@ test('JS options test', () => {
 });
 
 
-test('Destroy button test', () => {
+test('Destroy button with events test', () => {
   document.body.innerHTML = `
     <div>
       <button type="button" data-expands="menu">
@@ -242,15 +242,41 @@ test('Destroy button test', () => {
 
   var toggle = document.querySelector('[data-expands]');
 
+  var eventLog = {
+    ready: 0,
+    expand: 0,
+    collapse: 0,
+    destroy: 0
+  };
+
   var menu = new ExpandToggle(toggle, {
     expandedClasses: "is-expanded",
     shouldToggleHeight: true,
     activeToggleText: "Close",
+    onReady: function() {
+      eventLog.ready++;
+    }
+  });
+
+  menu.on('expand', function() {
+    eventLog.expand++;
+  });
+
+  menu.on('collapse', function() {
+    eventLog.collapse++;
+  });
+
+  menu.on('destroy', function() {
+    eventLog.destroy++;
   });
 
   // Expand
   toggle.click();
 
+  // Collapse
+  toggle.click();
+
+  // Destroy
   menu.destroy();
 
   expect(minify(document.body.innerHTML)).toBe(minify(`
@@ -275,6 +301,12 @@ test('Destroy button test', () => {
         <p>Menu content</p>
       </div>
     </div>`));
+
+  // Test that events fired
+  expect(eventLog.ready).toBe(1);
+  expect(eventLog.expand).toBe(1);
+  expect(eventLog.collapse).toBe(1);
+  expect(eventLog.destroy).toBe(1);
 });
 
 

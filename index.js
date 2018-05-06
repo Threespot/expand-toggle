@@ -1,6 +1,7 @@
 "use strict";
 
 import debounce from "lodash/debounce";
+import EventEmitter from "ev-emitter";
 
 /**
  * Wrap the last X words in an HTML tag to prevent them from wrapping (i.e. orphans)
@@ -9,10 +10,14 @@ import debounce from "lodash/debounce";
  * @param {string} [opts.expandedClasses=""] - Class(es) to apply when expanded
  * @param {boolean} [opts.shouldToggleHeight=false] - Whether or not to animate height
  * @param {string} [opts.defaultToggleText=""] - Expanded state toggle button text
+ * @param {function} [opts.onReady=""] - Ready callback function
  */
-export default class ExpandToggle {
+export default class ExpandToggle extends EventEmitter {
   constructor(el, opts) {
-    var self = this;
+    // Have to call super() first before referencing “this” since we’re extending EventEmitter
+    // https://stackoverflow.com/a/43591507/673457
+    super();
+
     this.el = el;
     this.targetId = this.el.getAttribute("data-expands");
     this.targetEl = document.getElementById(this.targetId);
@@ -29,7 +34,8 @@ export default class ExpandToggle {
       {
         expandedClasses: "", // string, accepts multiple space-separated classes
         shouldToggleHeight: false, // should target element’s height be animated using max-height
-        activeToggleText: "" // expanded state toggle button text
+        activeToggleText: "", // expanded state toggle button text
+        onReady: null // ready callback function
       },
       opts
     );
@@ -100,6 +106,40 @@ export default class ExpandToggle {
     // Keyboard listeners on toggle button
     this.keydownHandler = this.keyboardEvents.bind(this);
     this.el.addEventListener("keydown", this.keydownHandler);
+
+    // Check for onReady callback
+    if (typeof this.options.onReady === "function") {
+      this.options.onReady();
+    }
+  }
+
+  destroy() {
+    // Remove aria attributes
+    this.el.removeAttribute("aria-haspopup");
+    this.el.removeAttribute("aria-expanded");
+    this.targetEl.removeAttribute("aria-hidden");
+    this.targetEl.style.removeProperty("max-height");
+
+    if (this.el.tagName.toLowerCase() === "a") {
+      this.el.removeAttribute("role");
+    }
+
+    // Reset toggle text
+    if (this.hasActiveText) {
+      this.textEl.textContent = this.defaultToggleText;
+    }
+
+    // Remove custom classes
+    if (this.expandedClasses.length) {
+      this.el.classList.remove(...this.expandedClasses);
+      this.targetEl.classList.remove(...this.expandedClasses);
+    }
+
+    // Remove event listeners
+    this.el.removeEventListener("click", this.clickHandler);
+    this.el.removeEventListener("keydown", this.keydownHandler);
+
+    this.emitEvent("destroy");
   }
 
   keyboardEvents(evt) {
@@ -184,6 +224,8 @@ export default class ExpandToggle {
     // Update aria attributes
     this.el.setAttribute("aria-expanded", true);
     this.targetEl.setAttribute("aria-hidden", false);
+
+    this.emitEvent("expand");
   }
 
   collapse() {
@@ -201,6 +243,8 @@ export default class ExpandToggle {
     // Update aria attributes
     this.el.setAttribute("aria-expanded", false);
     this.targetEl.setAttribute("aria-hidden", true);
+
+    this.emitEvent("collapse");
   }
 
   toggle(evt) {
@@ -209,29 +253,5 @@ export default class ExpandToggle {
     } else {
       this.expand();
     }
-  }
-
-  // Remove attributes and event listeners
-  destroy() {
-    this.el.removeAttribute("aria-haspopup");
-    this.el.removeAttribute("aria-expanded");
-    this.targetEl.removeAttribute("aria-hidden");
-    this.targetEl.style.removeProperty("max-height");
-
-    if (this.el.tagName.toLowerCase() === "a") {
-      this.el.removeAttribute("role");
-    }
-
-    if (this.hasActiveText) {
-      this.textEl.textContent = this.defaultToggleText;
-    }
-
-    if (this.expandedClasses.length) {
-      this.el.classList.remove(...this.expandedClasses);
-      this.targetEl.classList.remove(...this.expandedClasses);
-    }
-
-    this.el.removeEventListener("click", this.clickHandler);
-    this.el.removeEventListener("keydown", this.keydownHandler);
   }
 }
