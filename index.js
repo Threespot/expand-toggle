@@ -142,11 +142,11 @@ export default class ExpandToggle extends EventEmitter {
     this.emitEvent("destroy");
   }
 
-  keyboardEvents(evt) {
+  keyboardEvents(event) {
     // Expand with down arrow
-    if (evt.keyCode == 40) {
+    if (event.keyCode == 40) {
       this.expand();
-    } else if (evt.keyCode == 38 || evt.keyCode == 27) {
+    } else if (event.keyCode == 38 || event.keyCode == 27) {
       // Close with up arrow or escape key
       this.collapse();
     }
@@ -209,7 +209,7 @@ export default class ExpandToggle extends EventEmitter {
     this.targetEl.style.maxHeight = expandedHeight + "px";
   }
 
-  expand() {
+  expand(event) {
     // Update toggle text
     if (this.hasActiveText) {
       this.textEl.textContent = this.activeToggleText;
@@ -225,10 +225,11 @@ export default class ExpandToggle extends EventEmitter {
     this.el.setAttribute("aria-expanded", true);
     this.targetEl.setAttribute("aria-hidden", false);
 
-    this.emitEvent("expand");
+    // Emit event and include original event as an argument
+    this.emitEvent("expand", event);
   }
 
-  collapse() {
+  collapse(event) {
     // Update toggle text
     if (this.hasActiveText) {
       this.textEl.textContent = this.defaultToggleText;
@@ -244,17 +245,18 @@ export default class ExpandToggle extends EventEmitter {
     this.el.setAttribute("aria-expanded", false);
     this.targetEl.setAttribute("aria-hidden", true);
 
-    this.emitEvent("collapse");
+    // Emit event and include original event as an argument
+    this.emitEvent("collapse", event);
   }
 
-  toggle(evt) {
+  toggle(event) {
     // Prevent default in case toggle element is a link instead of a button
-    evt.preventDefault();
+    event.preventDefault();
 
     if (this.el.getAttribute("aria-expanded") === "true") {
-      this.collapse();
+      this.collapse(event);
     } else {
-      this.expand();
+      this.expand(event);
     }
   }
 }
