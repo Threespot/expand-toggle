@@ -81,6 +81,8 @@ export default class ExpandToggle extends EventEmitter {
   }
 
   init() {
+    // Store state to avoid calling resize handler after component has been destroyed
+    this.isActive = true;
     // Accessibility setup
     this.el.setAttribute("aria-haspopup", true);
     this.el.setAttribute("aria-expanded", false);
@@ -114,6 +116,13 @@ export default class ExpandToggle extends EventEmitter {
   }
 
   destroy() {
+    this.isActive = false;
+
+    // Remove event listeners
+    this.el.removeEventListener("click", this.clickHandler);
+    this.el.removeEventListener("keydown", this.keydownHandler);
+    window.removeEventListener("resize", this.resizeHandler);
+
     // Remove aria attributes
     this.el.removeAttribute("aria-haspopup");
     this.el.removeAttribute("aria-expanded");
@@ -135,10 +144,6 @@ export default class ExpandToggle extends EventEmitter {
       this.targetEl.classList.remove(...this.expandedClasses);
     }
 
-    // Remove event listeners
-    this.el.removeEventListener("click", this.clickHandler);
-    this.el.removeEventListener("keydown", this.keydownHandler);
-
     this.emitEvent("destroy");
   }
 
@@ -159,13 +164,16 @@ export default class ExpandToggle extends EventEmitter {
     // Set max-height to the expanded height so we can animate it.
     this.updateExpandedHeight();
 
+    this.resizeHandler = debounce(event => {
+      // Due to debounce() it’s possible for this to run after destroy() has been called.
+      // To avoid this edge case, check “this.isActive” first.
+      if (this.isActive) {
+        this.updateExpandedHeight();
+      }
+    }, 100).bind(this);
+
     // Update target element’s max-height on resize
-    window.addEventListener(
-      "resize",
-      debounce(function(event) {
-        self.updateExpandedHeight();
-      }, 150)
-    );
+    window.addEventListener("resize", this.resizeHandler);
   }
 
   // Set max-height of target element to its expanded height without triggering relayout.
