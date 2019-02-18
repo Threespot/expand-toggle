@@ -162,13 +162,13 @@ export default class ExpandToggle extends EventEmitter {
     this.targetParentEl = this.targetEl.parentNode;
 
     // Set max-height to the expanded height so we can animate it.
-    this.updateExpandedHeight();
+    window.requestAnimationFrame(this.updateExpandedHeight.bind(this));
 
     this.resizeHandler = debounce(event => {
       // Due to debounce() it’s possible for this to run after destroy() has been called.
       // To avoid this edge case, check “this.isActive” first.
       if (this.isActive) {
-        this.updateExpandedHeight();
+        window.requestAnimationFrame(this.updateExpandedHeight.bind(this));
       }
     }, 100).bind(this);
 
