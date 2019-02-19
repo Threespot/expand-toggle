@@ -37,6 +37,10 @@ function addCSS() {
   head.appendChild(style);
 }
 
+// Mock requestAnimationFrame()
+// https://github.com/facebook/jest/issues/5147
+jest.spyOn(window, 'requestAnimationFrame').mockImplementation(cb => cb());
+
 // FIXME: Figure out why max-height is 0px in tests
 
 test('Basic test', () => {
