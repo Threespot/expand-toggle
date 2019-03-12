@@ -3,8 +3,7 @@ language: node_js
 install:
 - yarn install
 node_js:
-- "9"
+- "10"
 - "8"
-- "7"
 - "6"
 script: yarn test:prod
