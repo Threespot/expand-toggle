@@ -9,7 +9,8 @@ import EventEmitter from "ev-emitter";
  * @param {Object} opts - Options
  * @param {string} [opts.expandedClasses=""] - Class(es) to apply when expanded
  * @param {boolean} [opts.shouldToggleHeight=false] - Whether or not to animate height
- * @param {string} [opts.defaultToggleText=""] - Expanded state toggle button text
+ * @param {string} [opts.activeToggleText=""] - Expanded state toggle button text
+ * @param {boolean} [opts.shouldStartExpanded=false] - Whether menu should start expanded
  * @param {function} [opts.onReady=""] - Ready callback function
  */
 export default class ExpandToggle extends EventEmitter {
@@ -35,6 +36,7 @@ export default class ExpandToggle extends EventEmitter {
         expandedClasses: "", // string, accepts multiple space-separated classes
         shouldToggleHeight: false, // should target element’s height be animated using max-height
         activeToggleText: "", // expanded state toggle button text
+        shouldStartExpanded: false,// component starts expanded on init
         onReady: null // ready callback function
       },
       opts
@@ -65,6 +67,11 @@ export default class ExpandToggle extends EventEmitter {
       this.el.hasAttribute("data-expands-height") ||
       this.options.shouldToggleHeight;
 
+    // Check if component should start expanded
+    this.shouldStartExpanded =
+      this.el.hasAttribute("data-expanded") ||
+      this.options.shouldStartExpanded;
+
     // Check for custom toggle button text to use when expanded
     this.hasActiveText = false;
     this.textEl = this.el.querySelector("[data-expands-text]");
@@ -82,14 +89,14 @@ export default class ExpandToggle extends EventEmitter {
 
   init() {
     // Store state to avoid calling resize handler after component has been destroyed
-    this.isActive = true;
+    this.isActive = this.shouldStartExpanded;
     // Accessibility setup
     this.el.setAttribute("aria-haspopup", true);
-    this.el.setAttribute("aria-expanded", false);
+    this.el.setAttribute("aria-expanded", this.shouldStartExpanded);
     // Omit “aria-controls” for now
     // See https://inclusive-components.design/menus-menu-buttons/#ariacontrols
     // this.el.setAttribute("aria-controls", this.targetId);
-    this.targetEl.setAttribute("aria-hidden", true);
+    this.targetEl.setAttribute("aria-hidden", !this.shouldStartExpanded);
 
     if (this.el.tagName.toLowerCase() === "a") {
       this.el.setAttribute("role", "button");

@@ -75,6 +75,28 @@ test('Basic test', () => {
 });
 
 
+test('Start expanded test', () => {
+  document.body.innerHTML = `
+    <button type="button" data-expands="menu" data-expanded>Toggle Menu</button>
+    <div class="expandable" id="menu">
+      <p>Menu content</p>
+    </div>`;
+
+  // Add demo CSS required to make component work
+  addCSS();
+
+  var toggle = document.querySelector('[data-expands]');
+
+  var menu = new ExpandToggle(toggle);
+
+  expect(minify(document.body.innerHTML)).toBe(minify(`
+    <button type="button" data-expands="menu" data-expanded="" aria-haspopup="true" aria-expanded="true">Toggle Menu</button>
+    <div class="expandable" id="menu" aria-hidden="false">
+      <p>Menu content</p>
+    </div>`));
+});
+
+
 test('Keyboard test', () => {
   document.body.innerHTML = `
     <button type="button" data-expands="menu">Toggle Menu</button>
