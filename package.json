@@ -1,6 +1,6 @@
 {
   "name": "@threespot/expand-toggle",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Simple and accessible expandable functionality, similar to jQuery’s `slideToggle()` method.",
   "main": "dist/expand-toggle.m.js",
   "homepage": "https://threespot.github.io/expand-toggle/",
