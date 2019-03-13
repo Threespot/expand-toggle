@@ -205,6 +205,14 @@ export default class ExpandToggle extends EventEmitter {
     // Remove id just to be safe
     cloneEl.removeAttribute("id");
 
+    // Remove “name” attributes to prevent resetting checkbox or radio elements
+    let childElsWithId = cloneEl.querySelectorAll("[name]");
+
+    // IE-friendly way of iterating over a NodeList
+    Array.prototype.forEach.call(childElsWithId, el => {
+      el.removeAttribute("name");
+    });
+
     // Append clone to document, save as new let so we can remove it later
     let newEl = this.targetParentEl.insertBefore(cloneEl, this.targetEl);
 
