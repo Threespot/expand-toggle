@@ -88,7 +88,7 @@ export default class ExpandToggle extends EventEmitter {
 
   init() {
     // Store state to avoid calling resize handler after component has been destroyed
-    this.isActive = this.shouldStartExpanded;
+    this.hasInitialized = true;
     // Accessibility setup
     this.el.setAttribute("aria-haspopup", true);
     this.el.setAttribute("aria-expanded", this.shouldStartExpanded);
@@ -122,7 +122,7 @@ export default class ExpandToggle extends EventEmitter {
   }
 
   destroy() {
-    this.isActive = false;
+    this.hasInitialized = false;
 
     // Remove event listeners
     this.el.removeEventListener("click", this.clickHandler);
@@ -171,8 +171,8 @@ export default class ExpandToggle extends EventEmitter {
 
     this.resizeHandler = debounce(event => {
       // Due to debounce() it’s possible for this to run after destroy() has been called.
-      // To avoid this edge case, check “this.isActive” first.
-      if (this.isActive) {
+      // To avoid this edge case, check “this.hasInitialized” first.
+      if (this.hasInitialized) {
         window.requestAnimationFrame(this.updateExpandedHeight.bind(this));
       }
     }, 100).bind(this);
