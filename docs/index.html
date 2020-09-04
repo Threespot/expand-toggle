@@ -48,12 +48,17 @@
 
 
     <section class="readme">
-        <article><h1>Expand Toggle</h1><p><a href="https://www.npmjs.com/package/@threespot/expand-toggle"><img src="https://badge.fury.io/js/%40threespot%2Fexpand-toggle.svg" alt="npm"></a>
+        <article><h1>Expand Toggle</h1>
+<p><a href="https://www.npmjs.com/package/@threespot/expand-toggle"><img src="https://badge.fury.io/js/%40threespot%2Fexpand-toggle.svg" alt="npm"></a>
 <a href="https://travis-ci.org/Threespot/expand-toggle"><img src="https://travis-ci.org/Threespot/expand-toggle.svg?branch=master" alt="Build Status"></a>
 <a href="https://coveralls.io/github/Threespot/expand-toggle"><img src="https://coveralls.io/repos/github/Threespot/expand-toggle/badge.svg" alt="Coverage Status"></a></p>
 <p>Simple and accessible expandable functionality, similar to jQuery’s <code>slideToggle()</code> method.</p>
 <p>Inspired by https://inclusive-components.design/menus-menu-buttons#truemenus.</p>
-<h2>Install</h2><pre class="prettyprint source lang-bash"><code>yarn add @threespot/expand-toggle</code></pre><h2>Usage</h2><p><strong>JavaScript</strong></p>
+<h2>Install</h2>
+<pre class="prettyprint source lang-bash"><code>yarn add @threespot/expand-toggle
+</code></pre>
+<h2>Usage</h2>
+<p><strong>JavaScript</strong></p>
 <pre class="prettyprint source lang-js"><code>import ExpandToggle from &quot;@threespot/expand-toggle&quot;;
 
 const toggles = document.querySelectorAll(&quot;[data-expands]&quot;);
@@ -64,7 +69,9 @@ toggles.forEach(el => new ExpandToggle(el));
 // ES5
 for (var i = 0, len = toggles.length; i &lt; len; i++) {
   new ExpandToggle(toggles[i]);
-}</code></pre><p><strong>Styles</strong></p>
+}
+</code></pre>
+<p><strong>Styles</strong></p>
 <p>The following minimum styles are required:</p>
 <pre class="prettyprint source lang-scss"><code>// This class name is just an example
 .expandable {
@@ -95,14 +102,19 @@ for (var i = 0, len = toggles.length; i &lt; len; i++) {
 //       If not using Modernizr, see https://www.paulirish.com/2009/avoiding-the-fouc-v3/
 .no-js [data-expands] {
   display: none;
-}</code></pre><p><strong>Markup</strong></p>
+}
+</code></pre>
+<p><strong>Markup</strong></p>
 <pre class="prettyprint source lang-html"><code>&lt;button type=&quot;button&quot; data-expands=&quot;demo&quot; data-expands-class=&quot;is-expanded&quot; data-expands-height>
   &lt;span data-expands-text=&quot;Close&quot;>Open&lt;/span>
 &lt;/button>
 
 &lt;div class=&quot;expandable&quot; id=&quot;demo&quot;>
   &lt;p>This content will be hidden to start.&lt;/p>
-&lt;/div></code></pre><h3>Options</h3><p><code>data-expands-class</code> defines a class (or multiple classes) to apply to the toggle button and expandable element when expanded</p>
+&lt;/div>
+</code></pre>
+<h3>Options</h3>
+<p><code>data-expands-class</code> defines a class (or multiple classes) to apply to the toggle button and expandable element when expanded</p>
 <p><code>data-expands-height</code> transitions the menu height using <code>max-height</code> and CSS transitions (see required CSS above)</p>
 <p><code>data-expands-text</code> defines button text to use when expanded</p>
 <p>These options can also be set in JavaScript:</p>
@@ -110,22 +122,39 @@ for (var i = 0, len = toggles.length; i &lt; len; i++) {
   expandedClasses: &quot;is-expanded&quot;,
   shouldToggleHeight: true,
   activeToggleText: &quot;Close&quot;,
-});</code></pre><h3>Events</h3><h4>ready</h4><p>Since the <code>ready</code> event may be trigger immediately, bind using the <code>onReady</code> option:</p>
+});
+</code></pre>
+<h3>Events</h3>
+<h4>ready</h4>
+<p>Since the <code>ready</code> event may be trigger immediately, bind using the <code>onReady</code> option:</p>
 <pre class="prettyprint source lang-js"><code>const toggle = new ExpandToggle(el, {
   onReady: function() {
     console.log('ready');
   }
-});</code></pre><h4>expand</h4><p>Triggered when component is expanded</p>
+});
+</code></pre>
+<h4>expand</h4>
+<p>Triggered when component is expanded</p>
 <pre class="prettyprint source lang-js"><code>toggle.on('expand', function() {
   console.log('expand');
-});</code></pre><h4>collapse</h4><p>Triggered when component is collapsed</p>
+});
+</code></pre>
+<h4>collapse</h4>
+<p>Triggered when component is collapsed</p>
 <pre class="prettyprint source lang-js"><code>toggle.on('collapse', function() {
   console.log('collapse');
-});</code></pre><h4>destroy</h4><p>Triggered when component is destroyed</p>
+});
+</code></pre>
+<h4>destroy</h4>
+<p>Triggered when component is destroyed</p>
 <pre class="prettyprint source lang-js"><code>toggle.on('destroy', function() {
   console.log('destroy');
-});</code></pre><h2>License</h2><p>This is free software and may be redistributed under the terms of the <a href="https://github.com/Threespot/expand-toggle/blob/master/LICENSE.md">MIT license</a>.</p>
-<h2>About Threespot</h2><p>Threespot is an independent digital agency hell-bent on helping those, and only those, who are committed to helping others. Find out more at <a href="https://www.threespot.com">https://www.threespot.com</a>.</p>
+});
+</code></pre>
+<h2>License</h2>
+<p>This is free software and may be redistributed under the terms of the <a href="https://github.com/Threespot/expand-toggle/blob/master/LICENSE.md">MIT license</a>.</p>
+<h2>About Threespot</h2>
+<p>Threespot is an independent digital agency hell-bent on helping those, and only those, who are committed to helping others. Find out more at <a href="https://www.threespot.com">https://www.threespot.com</a>.</p>
 <p><a href="https://www.threespot.com"><img src="https://avatars3.githubusercontent.com/u/370822?v=3&amp;s=100" alt="Threespot"></a></p></article>
     </section>
 
@@ -139,7 +168,7 @@ for (var i = 0, len = toggles.length; i &lt; len; i++) {
 <br class="clear">
 
 <footer>
-    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Jul 10 2019 15:33:02 GMT-0400 (EDT) using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.5</a> on Fri Sep 04 2020 15:10:31 GMT-0400 (Eastern Daylight Time) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>
