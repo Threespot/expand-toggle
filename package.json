@@ -75,7 +75,6 @@
   },
   "dependencies": {
     "ev-emitter": "1.x",
-    "lodash": "4.17.20"
   },
   "directories": {
     "doc": "docs",

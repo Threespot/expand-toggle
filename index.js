@@ -1,8 +1,3 @@
-"use strict";
-
-import debounce from "lodash/debounce";
-import EventEmitter from "ev-emitter";
-
 /**
  * Wrap the last X words in an HTML tag to prevent them from wrapping (i.e. orphans)
  * @param {HTMLElement} el - Toggle button DOM node
@@ -13,6 +8,8 @@ import EventEmitter from "ev-emitter";
  * @param {boolean} [opts.shouldStartExpanded=false] - Whether menu should start expanded
  * @param {function} [opts.onReady=""] - Ready callback function
  */
+import EventEmitter from "ev-emitter";
+
 export default class ExpandToggle extends EventEmitter {
   constructor(el, opts) {
     // Have to call super() first before referencing “this” since we’re extending EventEmitter
@@ -121,6 +118,19 @@ export default class ExpandToggle extends EventEmitter {
     }
   }
 
+  // Debounce function
+  // https://www.joshwcomeau.com/snippets/javascript/debounce/
+  debounce(callback, wait) {
+    let timeoutId = null;
+
+    return (...args) => {
+      window.clearTimeout(timeoutId);
+      timeoutId = window.setTimeout(() => {
+        callback.apply(null, args);
+      }, wait);
+    };
+  }
+
   destroy() {
     this.hasInitialized = false;
 
@@ -169,7 +179,7 @@ export default class ExpandToggle extends EventEmitter {
     // Set max-height to the expanded height so we can animate it.
     window.requestAnimationFrame(this.updateExpandedHeight.bind(this));
 
-    this.resizeHandler = debounce(event => {
+    this.resizeHandler = this.debounce(() => {
       // Due to debounce() it’s possible for this to run after destroy() has been called.
       // To avoid this edge case, check “this.hasInitialized” first.
       if (this.hasInitialized) {
