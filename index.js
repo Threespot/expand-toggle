@@ -19,6 +19,7 @@ export default class ExpandToggle extends EventEmitter {
     this.el = el;
     this.targetId = this.el.getAttribute("data-expands");
     this.targetEl = document.getElementById(this.targetId);
+    this.targetParentEl = this.targetEl.parentNode;
 
     // Ensure target element exist before initializing
     if (!this.targetEl) {
@@ -174,8 +175,6 @@ export default class ExpandToggle extends EventEmitter {
   }
 
   heightToggleSetup() {
-    this.targetParentEl = this.targetEl.parentNode;
-
     // Set max-height to the expanded height so we can animate it.
     window.requestAnimationFrame(this.updateExpandedHeight.bind(this));
 
