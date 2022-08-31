@@ -190,7 +190,8 @@ export default class ExpandToggle extends EventEmitter {
     window.addEventListener("resize", this.resizeHandler);
   }
 
-  // Set max-height of target element to its expanded height without triggering relayout.
+  // Set inline “max-height” on target element equal to its expanded height
+  // (will be overridden by CSS when aria-hidden="true" is set)
   //
   // This technique works by creating an absolutely-positioned invisible clone of the target
   // element and calculating its height. This avoids any relayout that would otherwise occur
@@ -199,6 +200,10 @@ export default class ExpandToggle extends EventEmitter {
   // Note: We’re using CSS to transition max-height instead jQuery’s slideToggle(),
   //       or another 3rd-party lib like Velocity.js, to avoid loading a large lib.
   updateExpandedHeight() {
+    // Note: Element.scrollHeight also gets an element’s height, including hidden overflow content,
+    //       but fails when there are nested expandables.
+    // this.targetEl.style.maxHeight = this.targetEl.scrollHeight + "px";
+
     // Get width of original element so we can apply it to the clone
     let nodeWidth = Math.round(parseFloat(this.targetEl.offsetWidth));
 
