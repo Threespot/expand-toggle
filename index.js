@@ -3,7 +3,6 @@
  * @param {HTMLElement} el - Toggle button DOM node
  * @param {Object} opts - Options
  * @param {string} [opts.expandedClasses=""] - Class(es) to apply when expanded
- * @param {boolean} [opts.shouldToggleHeight=false] - Whether or not to animate height
  * @param {string} [opts.activeToggleText=""] - Expanded state toggle button text
  * @param {boolean} [opts.shouldStartExpanded=false] - Whether menu should start expanded
  * @param {function} [opts.onReady=""] - Ready callback function
@@ -24,7 +23,7 @@ export default class ExpandToggle extends EventEmitter {
     // Ensure target element exist before initializing
     if (!this.targetEl) {
       console.warn(`Can’t find expandable target with id “${this.targetId}”`);
-      return false;
+      return;
     }
 
     // Use Object.assign() to merge “opts” object with default values in this.options
@@ -32,7 +31,6 @@ export default class ExpandToggle extends EventEmitter {
       {},
       {
         expandedClasses: "", // string, accepts multiple space-separated classes
-        shouldToggleHeight: false, // should target element’s height be animated using max-height
         activeToggleText: "", // expanded state toggle button text
         shouldStartExpanded: false, // component starts expanded on init
         onReady: null // ready callback function
@@ -41,9 +39,7 @@ export default class ExpandToggle extends EventEmitter {
     );
 
     // Check for custom expanded class(es)
-    this.expandedClasses =
-      this.el.getAttribute("data-expands-class") ||
-      this.options.expandedClasses;
+    this.expandedClasses = this.el.getAttribute("data-expands-class") || this.options.expandedClasses;
 
     if (this.expandedClasses.length) {
       // Check if active class string contains multiple classes
@@ -59,11 +55,6 @@ export default class ExpandToggle extends EventEmitter {
         this.expandedClasses = [this.expandedClasses];
       }
     }
-
-    // Check if height should be animated
-    this.shouldToggleHeight =
-      this.el.hasAttribute("data-expands-height") ||
-      this.options.shouldToggleHeight;
 
     // Check if component should start expanded
     this.shouldStartExpanded =
@@ -87,9 +78,11 @@ export default class ExpandToggle extends EventEmitter {
   init() {
     // Store state to avoid calling resize handler after component has been destroyed
     this.hasInitialized = true;
+
     // Accessibility setup
     this.el.setAttribute("aria-haspopup", true);
     this.el.setAttribute("aria-expanded", this.shouldStartExpanded);
+
     // Omit “aria-controls” for now
     // See https://inclusive-components.design/menus-menu-buttons/#ariacontrols
     // this.el.setAttribute("aria-controls", this.targetId);
@@ -97,10 +90,6 @@ export default class ExpandToggle extends EventEmitter {
 
     if (this.el.tagName.toLowerCase() === "a") {
       this.el.setAttribute("role", "button");
-    }
-
-    if (this.shouldToggleHeight) {
-      this.heightToggleSetup();
     }
 
     // Click event listener on toggle button
@@ -119,32 +108,17 @@ export default class ExpandToggle extends EventEmitter {
     }
   }
 
-  // Debounce function
-  // https://www.joshwcomeau.com/snippets/javascript/debounce/
-  debounce(callback, wait) {
-    let timeoutId = null;
-
-    return (...args) => {
-      window.clearTimeout(timeoutId);
-      timeoutId = window.setTimeout(() => {
-        callback.apply(null, args);
-      }, wait);
-    };
-  }
-
   destroy() {
     this.hasInitialized = false;
 
     // Remove event listeners
     this.el.removeEventListener("click", this.clickHandler);
     this.el.removeEventListener("keydown", this.keydownHandler);
-    window.removeEventListener("resize", this.resizeHandler);
 
     // Remove aria attributes
     this.el.removeAttribute("aria-haspopup");
     this.el.removeAttribute("aria-expanded");
     this.targetEl.removeAttribute("aria-hidden");
-    this.targetEl.style.removeProperty("max-height");
 
     if (this.el.tagName.toLowerCase() === "a") {
       this.el.removeAttribute("role");
@@ -172,73 +146,6 @@ export default class ExpandToggle extends EventEmitter {
       // Close with up arrow or escape key
       this.collapse();
     }
-  }
-
-  heightToggleSetup() {
-    // Set max-height to the expanded height so we can animate it.
-    window.requestAnimationFrame(this.updateExpandedHeight.bind(this));
-
-    this.resizeHandler = this.debounce(() => {
-      // Due to debounce() it’s possible for this to run after destroy() has been called.
-      // To avoid this edge case, check “this.hasInitialized” first.
-      if (this.hasInitialized) {
-        window.requestAnimationFrame(this.updateExpandedHeight.bind(this));
-      }
-    }, 100).bind(this);
-
-    // Update target element’s max-height on resize
-    window.addEventListener("resize", this.resizeHandler);
-  }
-
-  // Set inline “max-height” on target element equal to its expanded height
-  // (will be overridden by CSS when aria-hidden="true" is set)
-  //
-  // This technique works by creating an absolutely-positioned invisible clone of the target
-  // element and calculating its height. This avoids any relayout that would otherwise occur
-  // if the element was briefly expanded so we could measure it.
-  //
-  // Note: We’re using CSS to transition max-height instead jQuery’s slideToggle(),
-  //       or another 3rd-party lib like Velocity.js, to avoid loading a large lib.
-  updateExpandedHeight() {
-    // Note: Element.scrollHeight also gets an element’s height, including hidden overflow content,
-    //       but fails when there are nested expandables.
-    // this.targetEl.style.maxHeight = this.targetEl.scrollHeight + "px";
-
-    // Get width of original element so we can apply it to the clone
-    let nodeWidth = Math.round(parseFloat(this.targetEl.offsetWidth));
-
-    // Create clone of node
-    let cloneEl = this.targetEl.cloneNode(true); // 'true' includes child nodes
-
-    // Inline styles added to prevent reflow, ensure clone is same size as expanded element
-    cloneEl.style.cssText = `max-height: none !important; position: absolute !important; right: 100% !important; visibility: hidden !important; width: ${nodeWidth}px !important; -webkit-transition: none !important; -moz-transition: none !important; transition: none !important`;
-
-    // Update “aria-hidden” attribute
-    cloneEl.setAttribute("aria-hidden", false);
-
-    // Remove id just to be safe
-    cloneEl.removeAttribute("id");
-
-    // Remove “name” attributes to prevent resetting checkbox or radio elements
-    let childElsWithId = cloneEl.querySelectorAll("[name]");
-
-    // IE-friendly way of iterating over a NodeList
-    Array.prototype.forEach.call(childElsWithId, el => {
-      el.removeAttribute("name");
-    });
-
-    // Append clone to document, save as new let so we can remove it later
-    let newEl = this.targetParentEl.insertBefore(cloneEl, this.targetEl);
-
-    // Calculate height
-    let expandedHeight = Math.round(parseFloat(newEl.offsetHeight));
-
-    // Remove cloned node to clean up after ourselves
-    this.targetParentEl.removeChild(newEl);
-
-    // Apply inline max-height to collapsed element
-    // Note: CSS is overriding this when aria-hidden="true"
-    this.targetEl.style.maxHeight = expandedHeight + "px";
   }
 
   expand(event) {
