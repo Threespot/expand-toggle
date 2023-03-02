@@ -6,7 +6,10 @@
 
 Simple and accessible expandable functionality, similar to jQuery’s `slideToggle()` method.
 
-Inspired by https://inclusive-components.design/menus-menu-buttons#truemenus.
+Inspired by:
+
+- https://inclusive-components.design/menus-menu-buttons#truemenus
+- https://www.stefanjudis.com/snippets/how-to-animate-height-with-css-grid/
 
 ## Install
 
@@ -21,15 +24,21 @@ yarn add @threespot/expand-toggle
 ```js
 import ExpandToggle from "@threespot/expand-toggle";
 
-const toggles = document.querySelectorAll("[data-expands]");
+document.querySelectorAll("[data-expands]").forEach(el => new ExpandToggle(el));
+```
 
-// ES6
-toggles.forEach(el => new ExpandToggle(el));
+**Markup**
 
-// ES5
-for (var i = 0, len = toggles.length; i < len; i++) {
-  new ExpandToggle(toggles[i]);
-}
+```html
+<button type="button" data-expands="demo" data-expands-class="is-expanded">
+  <span data-expands-text="Close">Open</span>
+</button>
+
+<div class="expandable" id="demo">
+  <div class="expandable-wrap">
+    <p>This content will be hidden to start.</p>
+  </div>
+</div>
 ```
 
 **Styles**
@@ -39,65 +48,41 @@ The following minimum styles are required:
 ```scss
 // This class name is just an example
 .expandable {
-  $transition-speed: 400ms;
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 250ms ease;
 
-  // Expanded state
-  &,
-  .js &[aria-hidden="false"] {
+  &[aria-hidden="false"],
+  .no-js & {
+    grid-template-rows: 1fr;
+  }
+
+  &-wrap {
     overflow: hidden;
-    transition: max-height $transition-speed ease-in-out,
-                visibility 0s linear 0s;
-    visibility: visible;
   }
-
-  // Collapsed state
-  &[aria-hidden="true"],
-  // Selector below prevents a flash of unstyled content (FOUC)
-  .js &:not([aria-hidden]) {
-    max-height: 0 !important;// !important required to override inline styles added by JS
-    transition: max-height $transition-speed ease-in-out,
-                visibility 0s linear $transition-speed;
-    visibility: hidden;
-  }
-}
-
-// We also suggest hiding the button when JS is disabled.
-// Note: Modernizr looks for a “no-js” class on the html tag and replaces it with “js” on load.
-//       If not using Modernizr, see https://www.paulirish.com/2009/avoiding-the-fouc-v3/
-.no-js [data-expands] {
-  display: none;
 }
 ```
 
-**Markup**
-
-```html
-<button type="button" data-expands="demo" data-expands-class="is-expanded" data-expands-height>
-  <span data-expands-text="Close">Open</span>
-</button>
-
-<div class="expandable" id="demo">
-  <p>This content will be hidden to start.</p>
-</div>
-```
 
 ### Options
 
 `data-expands-class` defines a class (or multiple classes) to apply to the toggle button and expandable element when expanded
 
-`data-expands-height` transitions the menu height using `max-height` and CSS transitions (see required CSS above)
-
 `data-expands-text` defines button text to use when expanded
 
-These options can also be set in JavaScript:
+`data-expanded` will expand the element by default
+
+The following options can be set via JavaScript:
 
 ```js
 new ExpandToggle(el, {
-  expandedClasses: "is-expanded",
-  shouldToggleHeight: true,
-  activeToggleText: "Close",
+  expandedClasses: "", // string, accepts multiple space-separated classes
+  activeToggleText: "", // expanded state toggle button text
+  shouldStartExpanded: false, // component starts expanded on init
+  onReady: null // ready callback function
 });
 ```
+
 
 ### Events
 
