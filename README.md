@@ -48,13 +48,17 @@ The following minimum styles are required:
 ```scss
 // This class name is just an example
 .expandable {
+  $speed: 500ms;
   display: grid;
   grid-template-rows: 0fr;
-  transition: grid-template-rows 250ms ease;
+  transition: grid-template-rows $speed ease, visibility 0s linear $speed;
+  visibility: hidden;
 
   &[aria-hidden="false"],
   .no-js & {
     grid-template-rows: 1fr;
+    transition: grid-template-rows $speed ease, visibility 0s linear 0s;
+    visibility: visible;
   }
 
   &-wrap {
