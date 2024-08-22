@@ -23,12 +23,12 @@
     "url": "https://github.com/Threespot/expand-toggle/issues"
   },
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=20.0.0"
   },
   "license": "MIT",
   "private": false,
   "scripts": {
-    "webpack": "webpack --config webpack.config.js",
+    "webpack": "NODE_OPTIONS=--openssl-legacy-provider webpack --config webpack.config.js",
     "docs": "jsdoc index.js -t node_modules/minami --readme README.md --destination docs",
     "test:prod": "jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "test": "jest --coverage --no-cache",
