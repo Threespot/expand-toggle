@@ -7,6 +7,8 @@
  * @param {boolean} [opts.shouldStartExpanded=false] - Whether menu should start expanded
  * @param {function} [opts.onReady=""] - Ready callback function
  */
+'use client';
+
 import EventEmitter from "ev-emitter";
 
 export default class ExpandToggle extends EventEmitter {
