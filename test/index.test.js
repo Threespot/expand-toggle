@@ -325,6 +325,31 @@ test("Destroy link test", () => {
   );
 });
 
+test("preserves non-text siblings inside [data-expands-text]", () => {
+  document.body.innerHTML = `
+    <button type="button" data-expands="menu">
+      <span data-expands-text="Close">Open<svg aria-hidden="true"></svg></span>
+    </button>
+    <div class="expandable" id="menu">
+      <p>Menu content</p>
+    </div>`;
+
+  const toggle = document.querySelector("[data-expands]");
+  new ExpandToggle(toggle);
+
+  toggle.click();
+
+  const span = toggle.querySelector("[data-expands-text]");
+  assert.equal(span.firstChild.nodeType, 3);
+  assert.equal(span.firstChild.data, "Close");
+  assert.ok(span.querySelector("svg"), "svg sibling should still be present after expand");
+
+  toggle.click();
+
+  assert.equal(span.firstChild.data, "Open");
+  assert.ok(span.querySelector("svg"), "svg sibling should still be present after collapse");
+});
+
 test("toggle/expand/collapse can be called without an event", () => {
   document.body.innerHTML = `
     <button type="button" data-expands="menu">Toggle Menu</button>

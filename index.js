@@ -10,6 +10,14 @@
 
 import EventEmitter from "ev-emitter";
 
+function firstTextNode(el) {
+  for (const node of el.childNodes) {
+    // 3 === Node.TEXT_NODE
+    if (node.nodeType === 3) return node;
+  }
+  return null;
+}
+
 export default class ExpandToggle extends EventEmitter {
   constructor(el, opts) {
     // Have to call super() first before referencing “this” since we’re extending EventEmitter
@@ -61,12 +69,15 @@ export default class ExpandToggle extends EventEmitter {
       this.el.hasAttribute("data-expanded") || this.options.shouldStartExpanded;
     this.isExpanded = this.shouldStartExpanded;
 
-    // Check for custom toggle button text to use when expanded
+    // Check for custom toggle button text to use when expanded. We swap the
+    // first child text node directly so that sibling children (e.g. an
+    // <svg> icon) are preserved across state changes.
     this.hasActiveText = false;
     this.textEl = this.el.querySelector("[data-expands-text]");
+    this.textNode = this.textEl ? firstTextNode(this.textEl) : null;
 
-    if (this.textEl) {
-      this.defaultToggleText = this.textEl.textContent;
+    if (this.textNode) {
+      this.defaultToggleText = this.textNode.data;
       this.activeToggleText =
         this.textEl.getAttribute("data-expands-text") ||
         this.options.activeToggleText;
@@ -101,7 +112,7 @@ export default class ExpandToggle extends EventEmitter {
         this.targetEl.classList.add(...this.expandedClasses);
       }
       if (this.hasActiveText) {
-        this.textEl.textContent = this.activeToggleText;
+        this.textNode.data = this.activeToggleText;
       }
     }
 
@@ -139,7 +150,7 @@ export default class ExpandToggle extends EventEmitter {
 
     // Reset toggle text
     if (this.hasActiveText) {
-      this.textEl.textContent = this.defaultToggleText;
+      this.textNode.data = this.defaultToggleText;
     }
 
     // Remove custom classes
@@ -166,7 +177,7 @@ export default class ExpandToggle extends EventEmitter {
     this.isExpanded = true;
 
     if (this.hasActiveText) {
-      this.textEl.textContent = this.activeToggleText;
+      this.textNode.data = this.activeToggleText;
     }
 
     if (this.expandedClasses.length) {
@@ -185,7 +196,7 @@ export default class ExpandToggle extends EventEmitter {
     this.isExpanded = false;
 
     if (this.hasActiveText) {
-      this.textEl.textContent = this.defaultToggleText;
+      this.textNode.data = this.defaultToggleText;
     }
 
     if (this.expandedClasses.length) {
