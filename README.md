@@ -72,7 +72,7 @@ The following minimum styles are required:
 
 `data-expands-class` defines a class (or multiple classes) to apply to the toggle button and expandable element when expanded
 
-`data-expands-text` defines button text to use when expanded
+`data-expands-text` defines button text to use when expanded. The element carrying this attribute should contain only text; mixing in icons (e.g. an inline `<svg>`) is not recommended. If you do mix them, only the first text node is swapped on expand/collapse, leaving siblings untouched — but the cleaner pattern is to wrap the swappable copy in its own element (e.g. a nested `<span data-expands-text="Close">Open</span>` next to a sibling icon).
 
 `data-expanded` will expand the element by default
 
