@@ -27,6 +27,7 @@ export default class ExpandToggle extends EventEmitter {
     this.el = el;
     this.targetId = this.el.getAttribute("data-expands");
     this.targetEl = document.getElementById(this.targetId);
+    this.isLink = this.el.tagName.toLowerCase() === "a";
 
     // Ensure target element exists before initializing
     if (!this.targetEl) {
@@ -100,7 +101,7 @@ export default class ExpandToggle extends EventEmitter {
     // this.el.setAttribute("aria-controls", this.targetId);
     this.targetEl.setAttribute("aria-hidden", !this.shouldStartExpanded);
 
-    if (this.el.tagName.toLowerCase() === "a") {
+    if (this.isLink) {
       this.el.setAttribute("role", "button");
     }
 
@@ -144,7 +145,7 @@ export default class ExpandToggle extends EventEmitter {
     this.el.removeAttribute("aria-expanded");
     this.targetEl.removeAttribute("aria-hidden");
 
-    if (this.el.tagName.toLowerCase() === "a") {
+    if (this.isLink) {
       this.el.removeAttribute("role");
     }
 
