@@ -325,6 +325,35 @@ test("Destroy link test", () => {
   );
 });
 
+test("disabled toggle does not change state", () => {
+  document.body.innerHTML = `
+    <button type="button" data-expands="menu" disabled>Toggle Menu</button>
+    <div class="expandable" id="menu">
+      <p>Menu content</p>
+    </div>`;
+
+  const toggle = document.querySelector("[data-expands]");
+  const menu = new ExpandToggle(toggle);
+
+  toggle.click();
+  assert.equal(menu.isExpanded, false);
+  assert.equal(toggle.getAttribute("aria-expanded"), "false");
+});
+
+test("aria-disabled toggle does not change state", () => {
+  document.body.innerHTML = `
+    <a href="#" data-expands="menu" aria-disabled="true">Toggle Menu</a>
+    <div class="expandable" id="menu">
+      <p>Menu content</p>
+    </div>`;
+
+  const toggle = document.querySelector("[data-expands]");
+  const menu = new ExpandToggle(toggle);
+
+  toggle.click();
+  assert.equal(menu.isExpanded, false);
+});
+
 test("expand and collapse are idempotent", () => {
   document.body.innerHTML = `
     <button type="button" data-expands="menu">Toggle Menu</button>

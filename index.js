@@ -203,6 +203,11 @@ export default class ExpandToggle extends EventEmitter {
     // Prevent default in case toggle element is a link instead of a button
     event.preventDefault();
 
+    // Respect disabled state for both <button disabled> and aria-disabled
+    if (this.el.disabled || this.el.getAttribute("aria-disabled") === "true") {
+      return;
+    }
+
     if (this.isExpanded) {
       this.collapse(event);
     } else {
