@@ -99,7 +99,7 @@ test("Start expanded applies classes and active text", () => {
   );
 });
 
-test("Keyboard test", () => {
+test("arrow and escape keys do not toggle (rely on native button activation)", () => {
   document.body.innerHTML = `
     <button type="button" data-expands="menu">Toggle Menu</button>
     <div class="expandable" id="menu">
@@ -107,31 +107,14 @@ test("Keyboard test", () => {
     </div>`;
 
   const toggle = document.querySelector("[data-expands]");
-  new ExpandToggle(toggle);
+  const menu = new ExpandToggle(toggle);
 
-  toggle.focus();
+  toggle.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown" }));
+  toggle.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+  toggle.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowUp" }));
 
-  toggle.dispatchEvent(new KeyboardEvent("keydown", { keyCode: 40 }));
-
-  assert.equal(
-    minify(document.body.innerHTML),
-    minify(`
-      <button type="button" data-expands="menu" aria-controls="menu" aria-expanded="true">Toggle Menu</button>
-      <div class="expandable" id="menu" aria-hidden="false">
-        <p>Menu content</p>
-      </div>`)
-  );
-
-  toggle.dispatchEvent(new KeyboardEvent("keydown", { keyCode: 27 }));
-
-  assert.equal(
-    minify(document.body.innerHTML),
-    minify(`
-      <button type="button" data-expands="menu" aria-controls="menu" aria-expanded="false">Toggle Menu</button>
-      <div class="expandable" id="menu" aria-hidden="true">
-        <p>Menu content</p>
-      </div>`)
-  );
+  assert.equal(menu.isExpanded, false);
+  assert.equal(toggle.getAttribute("aria-expanded"), "false");
 });
 
 test("Link with data attrs test", () => {

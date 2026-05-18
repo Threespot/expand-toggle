@@ -129,10 +129,6 @@ export default class ExpandToggle extends EventEmitter {
     this.clickHandler = this.toggle.bind(this);
     this.el.addEventListener("click", this.clickHandler);
 
-    // Keyboard listeners on toggle button
-    this.keydownHandler = this.keyboardEvents.bind(this);
-    this.el.addEventListener("keydown", this.keydownHandler);
-
     // Check for onReady callback
     if (typeof this.options.onReady === "function") {
       this.options.onReady();
@@ -144,7 +140,6 @@ export default class ExpandToggle extends EventEmitter {
 
     // Remove event listeners
     this.el.removeEventListener("click", this.clickHandler);
-    this.el.removeEventListener("keydown", this.keydownHandler);
 
     // Remove aria attributes
     this.el.removeAttribute("aria-haspopup");
@@ -168,16 +163,6 @@ export default class ExpandToggle extends EventEmitter {
     }
 
     this.emitEvent("destroy");
-  }
-
-  keyboardEvents(event) {
-    // Expand with down arrow
-    if (event.keyCode == 40) {
-      this.expand();
-    } else if (event.keyCode == 38 || event.keyCode == 27) {
-      // Close with up arrow or escape key
-      this.collapse();
-    }
   }
 
   expand(event) {
