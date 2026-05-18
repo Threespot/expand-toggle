@@ -1,13 +1,12 @@
 /**
- * Wrap the last X words in an HTML tag to prevent them from wrapping (i.e. orphans)
+ * Accessible expand/collapse component.
  * @param {HTMLElement} el - Toggle button DOM node
- * @param {Object} opts - Options
+ * @param {Object} [opts] - Options
  * @param {string} [opts.expandedClasses=""] - Class(es) to apply when expanded
  * @param {string} [opts.activeToggleText=""] - Expanded state toggle button text
- * @param {boolean} [opts.shouldStartExpanded=false] - Whether menu should start expanded
- * @param {function} [opts.onReady=""] - Ready callback function
+ * @param {boolean} [opts.shouldStartExpanded=false] - Whether the component should start expanded
+ * @param {function} [opts.onReady] - Ready callback function
  */
-'use client';
 
 import EventEmitter from "ev-emitter";
 
