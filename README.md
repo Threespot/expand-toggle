@@ -76,6 +76,8 @@ The following minimum styles are required:
 
 `data-expanded` will expand the element by default
 
+`data-expands-haspopup` opts the toggle into `aria-haspopup` and sets its value (e.g. `data-expands-haspopup="menu"` or `data-expands-haspopup="dialog"`). Omit unless the expandable behaves like a menu, dialog, listbox, tree, or grid — the [WAI-ARIA Disclosure pattern](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/) does not use `aria-haspopup`.
+
 The following options can be set via JavaScript:
 
 ```js
@@ -83,6 +85,7 @@ new ExpandToggle(el, {
   expandedClasses: "", // string, accepts multiple space-separated classes
   activeToggleText: "", // expanded state toggle button text
   shouldStartExpanded: false, // component starts expanded on init
+  ariaHasPopup: false, // false, true, or an ARIA 1.1 value ("menu", "dialog", "listbox", "tree", "grid")
   onReady: null // ready callback function
 });
 ```

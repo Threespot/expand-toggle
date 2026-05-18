@@ -42,10 +42,17 @@ export default class ExpandToggle extends EventEmitter {
         expandedClasses: "", // string, accepts multiple space-separated classes
         activeToggleText: "", // expanded state toggle button text
         shouldStartExpanded: false, // component starts expanded on init
+        ariaHasPopup: false, // false, true, or an ARIA 1.1 value ("menu", "listbox", "tree", "grid", "dialog")
         onReady: null // ready callback function
       },
       opts
     );
+
+    // Resolve aria-haspopup value from option or data attribute. When false
+    // we omit the attribute entirely (the WAI-ARIA Disclosure pattern does
+    // not use aria-haspopup; only enable it for menu-/dialog-like content).
+    const popupAttr = this.el.getAttribute("data-expands-haspopup");
+    this.ariaHasPopup = popupAttr !== null ? (popupAttr || "true") : this.options.ariaHasPopup;
 
     // Check for custom expanded class(es)
     this.expandedClasses = this.el.getAttribute("data-expands-class") || this.options.expandedClasses;
@@ -93,7 +100,9 @@ export default class ExpandToggle extends EventEmitter {
     this.hasInitialized = true;
 
     // Accessibility setup
-    this.el.setAttribute("aria-haspopup", true);
+    if (this.ariaHasPopup) {
+      this.el.setAttribute("aria-haspopup", this.ariaHasPopup === true ? "true" : this.ariaHasPopup);
+    }
     this.el.setAttribute("aria-controls", this.targetId);
     this.el.setAttribute("aria-expanded", this.shouldStartExpanded);
     this.targetEl.setAttribute("aria-hidden", !this.shouldStartExpanded);
