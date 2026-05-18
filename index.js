@@ -35,18 +35,14 @@ export default class ExpandToggle extends EventEmitter {
       return;
     }
 
-    // Use Object.assign() to merge “opts” object with default values in this.options
-    this.options = Object.assign(
-      {},
-      {
-        expandedClasses: "", // string, accepts multiple space-separated classes
-        activeToggleText: "", // expanded state toggle button text
-        shouldStartExpanded: false, // component starts expanded on init
-        ariaHasPopup: false, // false, true, or an ARIA 1.1 value ("menu", "listbox", "tree", "grid", "dialog")
-        onReady: null // ready callback function
-      },
-      opts
-    );
+    this.options = {
+      expandedClasses: "", // string, accepts multiple space-separated classes
+      activeToggleText: "", // expanded state toggle button text
+      shouldStartExpanded: false, // component starts expanded on init
+      ariaHasPopup: false, // false, true, or an ARIA 1.1 value ("menu", "listbox", "tree", "grid", "dialog")
+      onReady: null, // ready callback function
+      ...opts,
+    };
 
     // Resolve aria-haspopup value from option or data attribute. When false
     // we omit the attribute entirely (the WAI-ARIA Disclosure pattern does
@@ -54,23 +50,9 @@ export default class ExpandToggle extends EventEmitter {
     const popupAttr = this.el.getAttribute("data-expands-haspopup");
     this.ariaHasPopup = popupAttr !== null ? (popupAttr || "true") : this.options.ariaHasPopup;
 
-    // Check for custom expanded class(es)
-    this.expandedClasses = this.el.getAttribute("data-expands-class") || this.options.expandedClasses;
-
-    if (this.expandedClasses.length) {
-      // Check if active class string contains multiple classes
-      if (this.expandedClasses.indexOf(" ") > -1) {
-        // Convert to array and remove any empty string values
-        // caused by having multiple spaces in a row.
-        this.expandedClasses = this.expandedClasses
-          .split(" ")
-          .filter(n => n.length);
-      } else {
-        // We still need to convert a single active class to an array
-        // so we can use the spread syntax later in classList.add()
-        this.expandedClasses = [this.expandedClasses];
-      }
-    }
+    // Custom expanded class(es), always normalized to an array
+    const classSource = this.el.getAttribute("data-expands-class") || this.options.expandedClasses;
+    this.expandedClasses = classSource.split(/\s+/).filter(Boolean);
 
     // Check if component should start expanded
     this.shouldStartExpanded =
