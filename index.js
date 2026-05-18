@@ -94,11 +94,8 @@ export default class ExpandToggle extends EventEmitter {
 
     // Accessibility setup
     this.el.setAttribute("aria-haspopup", true);
+    this.el.setAttribute("aria-controls", this.targetId);
     this.el.setAttribute("aria-expanded", this.shouldStartExpanded);
-
-    // Omit "aria-controls" for now
-    // See https://inclusive-components.design/menus-menu-buttons/#ariacontrols
-    // this.el.setAttribute("aria-controls", this.targetId);
     this.targetEl.setAttribute("aria-hidden", !this.shouldStartExpanded);
 
     if (this.isLink) {
@@ -142,6 +139,7 @@ export default class ExpandToggle extends EventEmitter {
 
     // Remove aria attributes
     this.el.removeAttribute("aria-haspopup");
+    this.el.removeAttribute("aria-controls");
     this.el.removeAttribute("aria-expanded");
     this.targetEl.removeAttribute("aria-hidden");
 

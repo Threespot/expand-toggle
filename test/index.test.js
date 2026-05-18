@@ -37,7 +37,7 @@ test("Basic test", () => {
   assert.equal(
     minify(document.body.innerHTML),
     minify(`
-      <button type="button" data-expands="menu" aria-haspopup="true" aria-expanded="true">Toggle Menu</button>
+      <button type="button" data-expands="menu" aria-haspopup="true" aria-controls="menu" aria-expanded="true">Toggle Menu</button>
       <div class="expandable" id="menu" aria-hidden="false">
         <p>Menu content</p>
       </div>`)
@@ -48,7 +48,7 @@ test("Basic test", () => {
   assert.equal(
     minify(document.body.innerHTML),
     minify(`
-      <button type="button" data-expands="menu" aria-haspopup="true" aria-expanded="false">Toggle Menu</button>
+      <button type="button" data-expands="menu" aria-haspopup="true" aria-controls="menu" aria-expanded="false">Toggle Menu</button>
       <div class="expandable" id="menu" aria-hidden="true">
         <p>Menu content</p>
       </div>`)
@@ -68,7 +68,7 @@ test("Start expanded test", () => {
   assert.equal(
     minify(document.body.innerHTML),
     minify(`
-      <button type="button" data-expands="menu" data-expanded="" aria-haspopup="true" aria-expanded="true">Toggle Menu</button>
+      <button type="button" data-expands="menu" data-expanded="" aria-haspopup="true" aria-controls="menu" aria-expanded="true">Toggle Menu</button>
       <div class="expandable" id="menu" aria-hidden="false">
         <p>Menu content</p>
       </div>`)
@@ -90,7 +90,7 @@ test("Start expanded applies classes and active text", () => {
   assert.equal(
     minify(document.body.innerHTML),
     minify(`
-      <button type="button" data-expands="menu" data-expanded="" data-expands-class="is-expanded" aria-haspopup="true" aria-expanded="true" class="is-expanded">
+      <button type="button" data-expands="menu" data-expanded="" data-expands-class="is-expanded" aria-haspopup="true" aria-controls="menu" aria-expanded="true" class="is-expanded">
         <span data-expands-text="Close">Close</span>
       </button>
       <div class="expandable is-expanded" id="menu" aria-hidden="false">
@@ -116,7 +116,7 @@ test("Keyboard test", () => {
   assert.equal(
     minify(document.body.innerHTML),
     minify(`
-      <button type="button" data-expands="menu" aria-haspopup="true" aria-expanded="true">Toggle Menu</button>
+      <button type="button" data-expands="menu" aria-haspopup="true" aria-controls="menu" aria-expanded="true">Toggle Menu</button>
       <div class="expandable" id="menu" aria-hidden="false">
         <p>Menu content</p>
       </div>`)
@@ -127,7 +127,7 @@ test("Keyboard test", () => {
   assert.equal(
     minify(document.body.innerHTML),
     minify(`
-      <button type="button" data-expands="menu" aria-haspopup="true" aria-expanded="false">Toggle Menu</button>
+      <button type="button" data-expands="menu" aria-haspopup="true" aria-controls="menu" aria-expanded="false">Toggle Menu</button>
       <div class="expandable" id="menu" aria-hidden="true">
         <p>Menu content</p>
       </div>`)
@@ -154,7 +154,7 @@ test("Link with data attrs test", () => {
     minify(document.body.innerHTML),
     minify(`
       <div>
-        <a href="#" data-expands="menu" data-expands-class="is-expanded foo" data-expands-height="" aria-haspopup="true" aria-expanded="true" role="button" class="is-expanded foo">
+        <a href="#" data-expands="menu" data-expands-class="is-expanded foo" data-expands-height="" aria-haspopup="true" aria-controls="menu" aria-expanded="true" role="button" class="is-expanded foo">
           <span data-expands-text="Close">Close</span>
         </a>
         <div class="expandable is-expanded foo" id="menu" aria-hidden="false">
@@ -169,7 +169,7 @@ test("Link with data attrs test", () => {
     minify(document.body.innerHTML),
     minify(`
       <div>
-        <a href="#" data-expands="menu" data-expands-class="is-expanded foo" data-expands-height="" aria-haspopup="true" aria-expanded="false" role="button" class="">
+        <a href="#" data-expands="menu" data-expands-class="is-expanded foo" data-expands-height="" aria-haspopup="true" aria-controls="menu" aria-expanded="false" role="button" class="">
           <span data-expands-text="Close">Toggle Menu</span>
         </a>
         <div class="expandable" id="menu" aria-hidden="true">
@@ -203,7 +203,7 @@ test("JS options test", () => {
     minify(document.body.innerHTML),
     minify(`
       <div>
-        <button type="button" data-expands="menu" aria-haspopup="true" aria-expanded="true" class="is-expanded">
+        <button type="button" data-expands="menu" aria-haspopup="true" aria-controls="menu" aria-expanded="true" class="is-expanded">
           <span data-expands-text="">Close</span>
         </button>
         <div class="expandable is-expanded" id="menu" aria-hidden="false">
@@ -218,7 +218,7 @@ test("JS options test", () => {
     minify(document.body.innerHTML),
     minify(`
       <div>
-        <button type="button" data-expands="menu" aria-haspopup="true" aria-expanded="false" class="">
+        <button type="button" data-expands="menu" aria-haspopup="true" aria-controls="menu" aria-expanded="false" class="">
           <span data-expands-text="">Toggle Menu</span>
         </button>
         <div class="expandable" id="menu" aria-hidden="true">
