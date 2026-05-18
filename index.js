@@ -96,9 +96,6 @@ export default class ExpandToggle extends EventEmitter {
   }
 
   init() {
-    // Store state to avoid calling resize handler after component has been destroyed
-    this.hasInitialized = true;
-
     // Accessibility setup
     if (this.ariaHasPopup) {
       this.el.setAttribute("aria-haspopup", this.ariaHasPopup === true ? "true" : this.ariaHasPopup);
@@ -136,8 +133,6 @@ export default class ExpandToggle extends EventEmitter {
   }
 
   destroy() {
-    this.hasInitialized = false;
-
     // Remove event listeners
     this.el.removeEventListener("click", this.clickHandler);
 
