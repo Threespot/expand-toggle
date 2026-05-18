@@ -4,11 +4,14 @@
   "description": "Simple and accessible expandable functionality, similar to jQuery's `slideToggle()` method.",
   "type": "module",
   "main": "index.js",
+  "sass": "./expandable.scss",
   "exports": {
-    ".": "./index.js"
+    ".": "./index.js",
+    "./expandable.scss": "./expandable.scss"
   },
   "files": [
-    "index.js"
+    "index.js",
+    "expandable.scss"
   ],
   "sideEffects": false,
   "homepage": "https://github.com/Threespot/expand-toggle",

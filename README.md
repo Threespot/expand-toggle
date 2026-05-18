@@ -43,29 +43,27 @@ document.querySelectorAll("[data-expands]").forEach(el => new ExpandToggle(el));
 
 **Styles**
 
-The following minimum styles are required:
+The package ships a Sass mixin that produces the required styles. The expandable element needs a single child wrapper for `overflow: hidden`; the mixin targets `& > *`.
 
 ```scss
-// This class name is just an example
+@use "@threespot/expand-toggle/expandable" as et;
+
+// The class name is just an example
 .expandable {
-  $speed: 500ms;
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows $speed ease, visibility 0s linear $speed;
-  visibility: hidden;
-
-  &[aria-hidden="false"],
-  .no-js & {
-    grid-template-rows: 1fr;
-    transition: grid-template-rows $speed ease, visibility 0s linear 0s;
-    visibility: visible;
-  }
-
-  &-wrap {
-    overflow: hidden;
-  }
+  @include et.expandable;
 }
 ```
+
+Override the animation with two CSS custom properties (defaults: `400ms` and `ease-out`):
+
+```css
+:root {
+  --expand-speed: 500ms;
+  --expand-easing: cubic-bezier(0.4, 0, 0.2, 1);
+}
+```
+
+The mixin honors `prefers-reduced-motion` and applies the expanded state under `.no-js` so navigation menus remain usable without JavaScript.
 
 
 ### Options

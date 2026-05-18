@@ -1,0 +1,30 @@
+//------------------------------------------------------------------------
+// Expand/collapse styles for use with @threespot/expand-toggle.
+// See https://github.com/Threespot/expand-toggle
+//------------------------------------------------------------------------
+@mixin expandable() {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: grid-template-rows var(--expand-speed, 400ms) var(--expand-easing, ease-out),
+                visibility 0s linear var(--expand-speed, 400ms);
+  }
+
+  &[aria-hidden="false"],
+  .no-js & {
+    grid-template-rows: 1fr;
+    visibility: visible;
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition: grid-template-rows var(--expand-speed, 400ms) var(--expand-easing, ease-out),
+                  visibility 0s linear 0s;
+    }
+  }
+
+  // Requires a child wrapper
+  & > * {
+    overflow: hidden;
+  }
+}
