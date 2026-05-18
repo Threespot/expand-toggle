@@ -46,13 +46,15 @@ document.querySelectorAll("[data-expands]").forEach(el => new ExpandToggle(el));
 The package ships a Sass mixin that produces the required styles. The expandable element needs a single child wrapper for `overflow: hidden`; the mixin targets `& > *`.
 
 ```scss
-@use "@threespot/expand-toggle/expandable" as et;
+@use "@threespot/expand-toggle/expandable.scss" as et;
 
 // The class name is just an example
 .expandable {
   @include et.expandable;
 }
 ```
+
+The `.scss` extension is required — the package's `exports` map declares `./expandable.scss` explicitly, so Sass cannot fall back to the partial-style resolution it normally uses for extensionless paths.
 
 Override the animation with two CSS custom properties (defaults: `400ms` and `ease-out`):
 
