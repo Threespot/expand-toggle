@@ -1,8 +1,6 @@
 # Expand Toggle
 
 [![npm](https://badge.fury.io/js/%40threespot%2Fexpand-toggle.svg)](https://www.npmjs.com/package/@threespot/expand-toggle)
-[![Build Status](https://travis-ci.org/Threespot/expand-toggle.svg?branch=master)](https://travis-ci.org/Threespot/expand-toggle)
-[![Coverage Status](https://coveralls.io/repos/github/Threespot/expand-toggle/badge.svg)](https://coveralls.io/github/Threespot/expand-toggle)
 
 Simple and accessible expandable functionality, similar to jQuery’s `slideToggle()` method.
 
@@ -16,6 +14,8 @@ Inspired by:
 ```bash
 yarn add @threespot/expand-toggle
 ```
+
+Requires Node 20+. The package ships as an ES module (`"type": "module"`); consumers using CommonJS will need to load it via dynamic `import()`.
 
 ## Usage
 
@@ -131,6 +131,16 @@ toggle.on('destroy', function() {
   console.log('destroy');
 });
 ```
+
+## Development
+
+```bash
+yarn install
+yarn test            # run the suite (node --test against happy-dom)
+yarn test:coverage   # same, with experimental test coverage
+```
+
+There is no build step. `index.js` is the published source.
 
 ## License
 
