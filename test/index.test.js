@@ -325,6 +325,24 @@ test("Destroy link test", () => {
   );
 });
 
+test("toggle/expand/collapse can be called without an event", () => {
+  document.body.innerHTML = `
+    <button type="button" data-expands="menu">Toggle Menu</button>
+    <div class="expandable" id="menu">
+      <p>Menu content</p>
+    </div>`;
+
+  const toggle = document.querySelector("[data-expands]");
+  const menu = new ExpandToggle(toggle);
+
+  assert.doesNotThrow(() => menu.toggle());
+  assert.equal(menu.isExpanded, true);
+  assert.doesNotThrow(() => menu.toggle());
+  assert.equal(menu.isExpanded, false);
+  assert.doesNotThrow(() => menu.expand());
+  assert.doesNotThrow(() => menu.collapse());
+});
+
 test("disabled toggle does not change state", () => {
   document.body.innerHTML = `
     <button type="button" data-expands="menu" disabled>Toggle Menu</button>
