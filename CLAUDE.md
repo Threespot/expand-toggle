@@ -18,7 +18,7 @@ Never introduce Unicode smart quotes or curly quotes in any code file (PHP, JS, 
 
 - `yarn test` — runs the suite via `node --test` against happy-dom.
 - `yarn test:coverage` — same, with `--experimental-test-coverage`.
-- Run a single test: `node --test --test-name-pattern='Keyboard test' test/`.
+- Run a single test: `node --test --test-name-pattern='Keyboard test' test/index.test.js`.
 - `yarn patch` / `yarn minor` / `yarn major` — interactive release flow. These call `npm version`, which runs `preversion` (test) → `postversion` (git push + push tags). Don't run these speculatively — they tag and push.
 
 Node 20 / yarn 1.22 per `.tool-versions`. No build step, no transpiler, no linter — `index.js` is published as-is.
