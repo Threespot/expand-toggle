@@ -19,11 +19,10 @@ export default class ExpandToggle extends EventEmitter {
     this.el = el;
     this.targetId = this.el.getAttribute("data-expands");
     this.targetEl = document.getElementById(this.targetId);
-    this.targetParentEl = this.targetEl.parentNode;
 
-    // Ensure target element exist before initializing
+    // Ensure target element exists before initializing
     if (!this.targetEl) {
-      console.warn(`Can’t find expandable target with id “${this.targetId}”`);
+      console.warn(`Can't find expandable target with id "${this.targetId}"`);
       return;
     }
 

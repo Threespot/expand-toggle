@@ -300,3 +300,19 @@ test("Destroy link test", () => {
       </div>`)
   );
 });
+
+test("Missing target element warns and does not throw", (t) => {
+  const warnings = [];
+  const originalWarn = console.warn;
+  console.warn = (msg) => warnings.push(msg);
+  t.after(() => {
+    console.warn = originalWarn;
+  });
+
+  document.body.innerHTML = `<button type="button" data-expands="missing">Toggle</button>`;
+  const toggle = document.querySelector("[data-expands]");
+
+  assert.doesNotThrow(() => new ExpandToggle(toggle));
+  assert.equal(warnings.length, 1);
+  assert.match(warnings[0], /missing/);
+});
