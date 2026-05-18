@@ -75,6 +75,30 @@ test("Start expanded test", () => {
   );
 });
 
+test("Start expanded applies classes and active text", () => {
+  document.body.innerHTML = `
+    <button type="button" data-expands="menu" data-expanded data-expands-class="is-expanded">
+      <span data-expands-text="Close">Open</span>
+    </button>
+    <div class="expandable" id="menu">
+      <p>Menu content</p>
+    </div>`;
+
+  const toggle = document.querySelector("[data-expands]");
+  new ExpandToggle(toggle);
+
+  assert.equal(
+    minify(document.body.innerHTML),
+    minify(`
+      <button type="button" data-expands="menu" data-expanded="" data-expands-class="is-expanded" aria-haspopup="true" aria-expanded="true" class="is-expanded">
+        <span data-expands-text="Close">Close</span>
+      </button>
+      <div class="expandable is-expanded" id="menu" aria-hidden="false">
+        <p>Menu content</p>
+      </div>`)
+  );
+});
+
 test("Keyboard test", () => {
   document.body.innerHTML = `
     <button type="button" data-expands="menu">Toggle Menu</button>

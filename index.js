@@ -83,13 +83,25 @@ export default class ExpandToggle extends EventEmitter {
     this.el.setAttribute("aria-haspopup", true);
     this.el.setAttribute("aria-expanded", this.shouldStartExpanded);
 
-    // Omit “aria-controls” for now
+    // Omit "aria-controls" for now
     // See https://inclusive-components.design/menus-menu-buttons/#ariacontrols
     // this.el.setAttribute("aria-controls", this.targetId);
     this.targetEl.setAttribute("aria-hidden", !this.shouldStartExpanded);
 
     if (this.el.tagName.toLowerCase() === "a") {
       this.el.setAttribute("role", "button");
+    }
+
+    // If starting expanded, also apply expanded classes and active text so
+    // the initial state is consistent with later expand() calls.
+    if (this.shouldStartExpanded) {
+      if (this.expandedClasses.length) {
+        this.el.classList.add(...this.expandedClasses);
+        this.targetEl.classList.add(...this.expandedClasses);
+      }
+      if (this.hasActiveText) {
+        this.textEl.textContent = this.activeToggleText;
+      }
     }
 
     // Click event listener on toggle button
