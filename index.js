@@ -59,6 +59,7 @@ export default class ExpandToggle extends EventEmitter {
     // Check if component should start expanded
     this.shouldStartExpanded =
       this.el.hasAttribute("data-expanded") || this.options.shouldStartExpanded;
+    this.isExpanded = this.shouldStartExpanded;
 
     // Check for custom toggle button text to use when expanded
     this.hasActiveText = false;
@@ -161,42 +162,40 @@ export default class ExpandToggle extends EventEmitter {
   }
 
   expand(event) {
-    // Update toggle text
+    if (this.isExpanded) return;
+    this.isExpanded = true;
+
     if (this.hasActiveText) {
       this.textEl.textContent = this.activeToggleText;
     }
 
-    // Add classes
     if (this.expandedClasses.length) {
       this.el.classList.add(...this.expandedClasses);
       this.targetEl.classList.add(...this.expandedClasses);
     }
 
-    // Update aria attributes
     this.el.setAttribute("aria-expanded", true);
     this.targetEl.setAttribute("aria-hidden", false);
 
-    // Emit event and include original event as an argument
     this.emitEvent("expand", event);
   }
 
   collapse(event) {
-    // Update toggle text
+    if (!this.isExpanded) return;
+    this.isExpanded = false;
+
     if (this.hasActiveText) {
       this.textEl.textContent = this.defaultToggleText;
     }
 
-    // Remove classes
     if (this.expandedClasses.length) {
       this.el.classList.remove(...this.expandedClasses);
       this.targetEl.classList.remove(...this.expandedClasses);
     }
 
-    // Update aria attributes
     this.el.setAttribute("aria-expanded", false);
     this.targetEl.setAttribute("aria-hidden", true);
 
-    // Emit event and include original event as an argument
     this.emitEvent("collapse", event);
   }
 
@@ -204,7 +203,7 @@ export default class ExpandToggle extends EventEmitter {
     // Prevent default in case toggle element is a link instead of a button
     event.preventDefault();
 
-    if (this.el.getAttribute("aria-expanded") === "true") {
+    if (this.isExpanded) {
       this.collapse(event);
     } else {
       this.expand(event);

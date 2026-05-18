@@ -325,6 +325,31 @@ test("Destroy link test", () => {
   );
 });
 
+test("expand and collapse are idempotent", () => {
+  document.body.innerHTML = `
+    <button type="button" data-expands="menu">Toggle Menu</button>
+    <div class="expandable" id="menu">
+      <p>Menu content</p>
+    </div>`;
+
+  const toggle = document.querySelector("[data-expands]");
+  const menu = new ExpandToggle(toggle);
+
+  let expandCount = 0;
+  let collapseCount = 0;
+  menu.on("expand", () => expandCount++);
+  menu.on("collapse", () => collapseCount++);
+
+  menu.expand();
+  menu.expand();
+  menu.expand();
+  assert.equal(expandCount, 1);
+
+  menu.collapse();
+  menu.collapse();
+  assert.equal(collapseCount, 1);
+});
+
 test("Missing target element warns and does not throw", (t) => {
   const warnings = [];
   const originalWarn = console.warn;
